@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "emccommandextension",
+	"version": "${version}",
+	"name": "emccommandextension",
+	"description": "This mod extends the commands in EarthMc.You can use it in anywhere",
+	"authors": [
+		"AxolotlDreamer"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/emccommandextension/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"io.github.anaxolotldreamerr.Emccommandextension"
+		],
+		"client": [
+			"io.github.anaxolotldreamerr.client.EmccommandextensionClient"
+		]
+	},
+	"mixins": [
+		"emccommandextension.mixins.json",
+		{
+			"config": "emccommandextension.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

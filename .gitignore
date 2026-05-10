@@ -1,0 +1,48 @@
+# gradle
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+*.launch
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+*.DS_Store
+
+# fabric
+run/
+
+# java
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+
+# 本地配置（包含你的F盘路径）
+config.json
+*.local.json
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+
+# 日志
+*.log
+
+# Windows
+Thumbs.db
