@@ -1,4 +1,4 @@
-package io.github.anaxolotldreamerr.commands;
+package io.github.anaxolotldreamerr.commands.favorites;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,10 +16,12 @@ public enum Arguments {
         LOOKUP.put(sArg,arg);
     }
     public static Set<Arguments> match(String... args){
-        return Arrays.stream(args).filter(arg ->
-                for(int sArg :args){
-                    if(LOOKUP.containsKey(arg))return true;
-        }
-                )
+        return Arrays.stream(args).filter(arg -> {
+                    for (String sArg : args) {
+                        if (LOOKUP.containsKey(arg)) return true;
+                    }
+                    return false;
+                }
+                ).map(LOOKUP::get).collect(Collectors.toSet());
     }
 }
