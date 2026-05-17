@@ -1,11 +1,14 @@
 package io.github.anaxolotldreamerr.client.network;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.cache.TownCache;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.exception.ExceptionRegistry;
+import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
+import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.minecraft.ChatFormatting;
@@ -18,42 +21,98 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
 
-/*
-
-
- */
 public final class EMCApiRequest {
+
     private static URI townURI;
     private static URI nationURI;
     private static URI playerURI;
-    private static final Exception WRONG_TOWNURI =new Exception("[ECE]Wrong town URI,check the profile config.json");
-    private static final Exception WRONG_NATIONURI =new Exception("[ECE]Wrong nation URI,check the profile config.json");
-    private static final Exception WRONG_PLAYERURI =new Exception("[ECE]Wrong player URI,check the profile config.json");
-    private static ConfigManager config = new ConfigManager();
+    private static final Exception WRONG_TOWNURI =new Exception("Wrong town URI,check the profile config.json");
+    private static final Exception WRONG_NATIONURI =new Exception("Wrong nation URI,check the profile config.json");
+    private static final Exception WRONG_PLAYERURI =new Exception("Wrong player URI,check the profile config.json");
+    private static final ConfigManager config = new ConfigManager();
     private static final HttpClient CLIENT =
             HttpClient.newHttpClient();
-
     private static final ObjectMapper MAPPER =
             new ObjectMapper();
-    private EMCApiRequest() {}
 
+    public static URI townURI() {
+        return townURI;
+    }
+
+    public static URI nationURI() {
+        return nationURI;
+    }
+
+    public static URI playerURI() {
+        return playerURI;
+    }
+
+    private EMCApiRequest() {}
+    public static Set<PlayerIdentifier> getPlayerIdentifiers(){
+        String players;
+        try {
+            players = request(playerURI,"");
+            if(players == null){
+                ChatUtil.sendException(new Exception("PlayerIdentifiers json are null!"));
+                return Collections.EMPTY_SET;
+            }
+        } catch (IOException e) {
+            ChatUtil.sendException(WRONG_PLAYERURI);
+            return Collections.EMPTY_SET;
+        }
+        try {
+            return MAPPER.readValue(players, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            ChatUtil.send(Component.literal("Can't deserialize the PlayerIdentifier").withStyle(ChatFormatting.RED));
+            return Collections.EMPTY_SET;
+        }
+    }
+    public static Set<NationIdentifier> getNationIdentifiers(){
+        String nations;
+        try {
+            nations = request(nationURI,"");
+            if(nations == null){
+                ChatUtil.sendException(new Exception("NationIdentifiers json are null!"));
+                return Collections.EMPTY_SET;
+            }
+        } catch (IOException e) {
+            ChatUtil.sendException(WRONG_NATIONURI);
+            return Collections.EMPTY_SET;
+        }
+        try {
+            return MAPPER.readValue(nations, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            ChatUtil.send(Component.literal("Can't deserialize the NationIdentifier").withStyle(ChatFormatting.RED));
+            return Collections.EMPTY_SET;
+        }
+    }
     public static Set<TownIdentifier> getTownIdentifiers(){
         String towns;
         try {
             towns = request(townURI,"");
-            ExceptionRegistry.turnOff(WRONG_TOWNURI);
+            if(towns == null){
+                ChatUtil.sendException(new Exception("TownIdentifiers json are null!"));
+                return Collections.EMPTY_SET;
+            }
         } catch (IOException e) {
-            ExceptionRegistry.turnOn(WRONG_TOWNURI);
+            ChatUtil.sendException(WRONG_TOWNURI);
             return Collections.EMPTY_SET;
         }
         try {
-            return MAPPER.readValue(towns, new HashSet<TownIdentifier>().getClass());
+            return MAPPER.readValue(towns, new TypeReference<>() {
+            });
         } catch (JsonProcessingException e) {
-            ChatUtil.send(Component.literal("[ECE]Can't deserialize the TownIdentifier").withStyle(ChatFormatting.RED));
+            ChatUtil.send(Component.literal("Can't deserialize the TownIdentifier").withStyle(ChatFormatting.RED));
             return Collections.EMPTY_SET;
         }
     }
-    private static String request(URI URI,String post) throws IOException {
+    public static String request(URI URI,String post) throws IOException {
+        if(URI == null){
+            ChatUtil.sendException(new IllegalArgumentException("The URI is null!"));
+            return null;
+        }
        HttpRequest request = HttpRequest.newBuilder()
                .uri(URI)
                .POST(HttpRequest.BodyPublishers.ofString(post))
@@ -62,17 +121,17 @@ public final class EMCApiRequest {
        try {
            response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
        } catch (InterruptedException e) {
-           ChatUtil.send(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
-           return "";
+           ChatUtil.sendException(e);
+           return null;
        }
         return response.body();
    }
-   public static void readConfig(){
+   public static void configure(){
        JsonNode conf;
        try {
            conf = config.read("config.json");
        } catch (IOException e) {
-           ExceptionRegistry.turnOn(e);
+           ChatUtil.sendException(e);
            return;
        }
        townURI = URI.create(conf.get("townURI").asText());

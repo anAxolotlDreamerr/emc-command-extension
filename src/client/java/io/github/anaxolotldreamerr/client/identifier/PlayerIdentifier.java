@@ -31,4 +31,12 @@ public class PlayerIdentifier {
     public int hashCode() {
         return Objects.hash(name, uuid);
     }
+
+    @Override
+    public String toString() {
+        return "PlayerIdentifier{" +
+                "name='" + name + '\'' +
+                ", uuid='" + uuid + '\'' +
+                '}';
+    }
 }

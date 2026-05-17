@@ -30,4 +30,12 @@ public final class TownIdentifier {
     public int hashCode() {
         return Objects.hash(name, uuid);
     }
+
+    @Override
+    public String toString() {
+        return "TownIdentifier{" +
+                "name='" + name + '\'' +
+                ", uuid='" + uuid + '\'' +
+                '}';
+    }
 }

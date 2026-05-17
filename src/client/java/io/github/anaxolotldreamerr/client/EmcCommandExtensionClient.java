@@ -14,7 +14,7 @@ public class EmcCommandExtensionClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ExceptionRegistry.register();
 		CommandRegistry.register();
-		EMCApiRequest.readConfig();
+		EMCApiRequest.configure();
 		LOGGER.info("Hello Fabric");
 	}
 }

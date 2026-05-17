@@ -4,10 +4,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
+import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
+import io.github.anaxolotldreamerr.client.util.ChatUtil;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Town {
@@ -29,8 +37,30 @@ public final class Town {
         this.balance = balance;
     }
 
-    public Town byIdentifier(TownIdentifier identifier){
-
+    public static Town byIdentifier(TownIdentifier identifier){
+        JsonNode node;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            node = mapper.readTree(EMCApiRequest.request(EMCApiRequest.townURI()
+                    ,mapper.writeValueAsString(identifier)));
+        } catch (IOException e) {
+            ChatUtil.sendException(new IOException("Can't deserialize the town identifier:"+identifier));
+            return null;
+        }
+        String name = identifier.name();
+        String uuid = identifier.uuid();
+        PlayerIdentifier mayor = new PlayerIdentifier(node.get("mayor").get("name").asText(),node.get("uuid").asText());
+        NationIdentifier nation = new NationIdentifier(node.get("nation").get("name").asText(),node.get("uuid").asText());
+        Coordinate coordinate = new Coordinate(node.get("coordinates").get("homeBlock").get(0).asInt(),node.get("coordinates").get("homeBlock").get(1).asInt());
+        Set<PlayerIdentifier> identifiers = Collections.EMPTY_SET;
+        try {
+            identifiers = mapper.readValue(node.get("residents").asText(), new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            ChatUtil.sendException(new IOException("Can't deserialize residents of town:"+identifier));
+        }
+        Integer balance = node.get("stats").get("balance").asInt();
+        return new Town(name,mayor,coordinate,nation,uuid,identifiers,balance);
     }
 
     @Override

@@ -30,4 +30,12 @@ public class NationIdentifier {
     public int hashCode() {
         return Objects.hash(name, uuid);
     }
+
+    @Override
+    public String toString() {
+        return "NationIdentifier{" +
+                "name='" + name + '\'' +
+                ", uuid='" + uuid + '\'' +
+                '}';
+    }
 }
