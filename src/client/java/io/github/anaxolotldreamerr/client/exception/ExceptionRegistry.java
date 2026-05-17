@@ -27,7 +27,7 @@ public class ExceptionRegistry {
     }
     public static void turnOff(Exception e){
         ChatUtil.send(Component
-                .literal(e.getMessage()+" has been solved")
+                .literal("[ECE]A exception has been solved")
                 .withStyle(ChatFormatting.GREEN));
         exceptions.put(e,Boolean.FALSE);
     }

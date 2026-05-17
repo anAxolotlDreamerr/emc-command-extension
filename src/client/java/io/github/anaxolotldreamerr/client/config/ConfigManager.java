@@ -1,4 +1,5 @@
 package io.github.anaxolotldreamerr.client.config;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import net.fabricmc.loader.api.FabricLoader;
@@ -17,10 +18,10 @@ public class ConfigManager {
                 throw new RuntimeException("[ECE]Failed to create config directory", e);
             }
     }
-    private String read(String filePath) throws IOException {
+    public JsonNode read(String filePath) throws IOException {
         Path file = CONFIGDIR.resolve(filePath);
-        if(Files.exists(file)) return Files.readString(file);
-        throw new FileNotFoundException("File:"+file+" isn't exist!");
+        if(Files.exists(file)) return mapper.readTree(file.toFile());
+        throw new FileNotFoundException("[ECE]File:"+file+" isn't exist!");
     }
     public void write(String filePath,Object object) throws IOException {
         Path file = CONFIGDIR.resolve(filePath);
