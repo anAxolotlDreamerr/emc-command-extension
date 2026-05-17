@@ -1,4 +1,4 @@
-package io.github.anaxolotldreamerr.commands.favorites;
+package io.github.anaxolotldreamerr.client.commands.favorites;
 
 import java.util.*;
 import java.util.stream.Collectors;

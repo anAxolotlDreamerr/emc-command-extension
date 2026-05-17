@@ -1,9 +1,8 @@
-package io.github.anaxolotldreamerr.commands;
+package io.github.anaxolotldreamerr.client.commands;
 
 
-import io.github.anaxolotldreamerr.commands.favorites.CFavorites;
+import io.github.anaxolotldreamerr.client.commands.favorites.CFavorites;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-
 import java.util.Set;
 
 public class CommandRegistry {

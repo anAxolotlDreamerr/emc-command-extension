@@ -3,7 +3,7 @@
 	"id": "emccommandextension",
 	"version": "${version}",
 	"name": "emccommandextension",
-	"description": "This mod extends the commands in EarthMc.You can use it in anywhere",
+	"description": "This mod extends EarthMC commands and allows you to use them anytime.",
 	"authors": [
 		"AxolotlDreamer"
 	],
@@ -16,10 +16,10 @@
 	"environment": "client",
 	"entrypoints": {
 		"main": [
-			"io.github.anaxolotldreamerr.Emccommandextension"
+			"io.github.anaxolotldreamerr.EmcCommandExtension"
 		],
 		"client": [
-			"io.github.anaxolotldreamerr.client.EmccommandextensionClient"
+			"io.github.anaxolotldreamerr.client.EmcCommandExtensionClient"
 		]
 	},
 	"mixins": [

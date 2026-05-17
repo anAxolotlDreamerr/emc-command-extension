@@ -1,4 +1,4 @@
-package io.github.anaxolotldreamerr.commands;
+package io.github.anaxolotldreamerr.client.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;

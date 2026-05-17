@@ -1,7 +1,7 @@
-package io.github.anaxolotldreamerr.commands.favorites;
+package io.github.anaxolotldreamerr.client.commands.favorites;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.anaxolotldreamerr.commands.EMCCommand;
+import io.github.anaxolotldreamerr.client.commands.EMCCommand;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 public class CFavorites implements EMCCommand {
