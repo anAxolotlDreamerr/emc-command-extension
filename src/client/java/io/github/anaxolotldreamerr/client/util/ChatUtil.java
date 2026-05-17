@@ -1,0 +1,11 @@
+package io.github.anaxolotldreamerr.client.util;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+
+public class ChatUtil {
+    private static Minecraft mc = Minecraft.getInstance();
+    public static void send(Component component){
+        mc.execute(()-> mc.gui.getChat().addMessage(component));
+    }
+}
