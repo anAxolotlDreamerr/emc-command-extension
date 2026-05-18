@@ -11,12 +11,26 @@ public class TownCache {
     private Set<TownIdentifier> townIdentifiers = new HashSet<>();
     private Set<Town> towns = new HashSet<>();
     public TownCache(){}
-    public TownCache addTownIdentifier(TownIdentifier... townIdentifiers){
+    public TownCache add(TownIdentifier... townIdentifiers){
         this.townIdentifiers.addAll(Arrays.asList(townIdentifiers));
         return this;
     }
-    public TownCache addTown(Town... towns){
+    public TownCache add(Town... towns){
         this.towns.addAll(Arrays.asList(towns));
         return this;
+    }
+    public Set<TownIdentifier> identifiers(){
+        return Set.copyOf(townIdentifiers);
+    }
+    public Set<Town> towns(){
+        return Set.copyOf(towns);
+    }
+
+    @Override
+    public String toString() {
+        return "TownCache{" +
+                "townIdentifiers=" + townIdentifiers +
+                ", towns=" + towns +
+                '}';
     }
 }

@@ -15,4 +15,11 @@ public class CFavorites implements EMCCommand {
     public static CFavorites getInstance(){
         return INSTANCE;
     }
+    private static enum ChildCommand{
+        CREATE("create");
+        private String command;
+        ChildCommand(String command){
+            this.command = command;
+        }
+    }
 }
