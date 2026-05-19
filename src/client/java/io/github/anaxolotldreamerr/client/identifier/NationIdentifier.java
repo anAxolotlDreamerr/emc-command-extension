@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class NationIdentifier {
+public class NationIdentifier implements Identifier {
     private String name;
     private String uuid;
     @JsonCreator

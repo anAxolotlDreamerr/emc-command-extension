@@ -1,7 +1,9 @@
 package io.github.anaxolotldreamerr.client.model;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Objects;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Coordinate {
 
     private final int x;

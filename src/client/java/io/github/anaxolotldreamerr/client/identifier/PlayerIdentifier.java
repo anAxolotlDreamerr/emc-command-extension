@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class PlayerIdentifier {
+public class PlayerIdentifier implements Identifier {
     private String name;
     private String uuid;
     @JsonCreator
