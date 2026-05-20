@@ -10,7 +10,7 @@ public enum QueryArguments {
     NAME("-n"){
         @Override
         public Map<String,Favorites> query(TypeArguments type){
-            Set<Favorites> set = type.favoritesSet;
+            Set<? extends Favorites> set = type.cache().favoritesSet();
             Map<String,Favorites> map = new HashMap<>();
             for(Favorites favorites :set){
                 map.put(favorites.name(),favorites);
@@ -20,7 +20,7 @@ public enum QueryArguments {
     },ID("-i"){
         @Override
         public Map<String,Favorites> query(TypeArguments type) {
-            Set<Favorites> set = type.favoritesSet;
+            Set<? extends Favorites<?>> set = type.cache().favoritesSet();
             Map<String, Favorites> map = new HashMap<>();
             for (Favorites favorites : set) {
                 map.put(favorites.id(), favorites);

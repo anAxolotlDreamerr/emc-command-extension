@@ -2,25 +2,33 @@ package io.github.anaxolotldreamerr.client.commands.favorites;
 
 
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
+import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import io.github.anaxolotldreamerr.client.model.Favorites;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
-import net.minecraft.IdentifierException;
 
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+
 
 
 public enum MethodArguments {
-    TOWN("-t",((favorites, identifier) -> {
-        fa
-    })
-            ,
-            );
+    TOWN("-t",
+            ((favorites, identifier) -> {
+                if(identifier instanceof TownIdentifier town){
+                    favorites.add(identifier);
+                }
+            }),
+            ((favorites, identifier) -> {
+                if(identifier instanceof TownIdentifier town){
+                    favorites.remove(identifier);
+                }
+            })
+
+    );
     private final String name;
     private final BiConsumer<Favorites,Identifier> add;
     private final BiConsumer<Favorites,Identifier> remove;
-    MethodArguments(String name,BiConsumer<Favorites,Identifier> add,BiConsumer<Favorites,Identifier> remove){
+     MethodArguments(String name,BiConsumer<Favorites,Identifier> add,BiConsumer<Favorites,Identifier> remove){
         this.name = name;
         this.add = add;
         this.remove=remove;
