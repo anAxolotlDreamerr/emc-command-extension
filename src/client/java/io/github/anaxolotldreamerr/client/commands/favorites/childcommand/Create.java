@@ -30,6 +30,11 @@ public class Create implements ECommand {
         node.addChild(
                 LiteralArgumentBuilder
                         .<FabricClientCommandSource>literal(NAME)
+                        .then(argument("type", StringArgumentType.word())
+                                .suggests((context, builder) -> {
+                                    builder.suggest("-t");
+                                    return builder.buildFuture();
+                                })
                         .then(argument("name", StringArgumentType.word())
                                 .then(argument("id", StringArgumentType.word()).executes((context -> {
                                     new Thread(()->{
@@ -43,7 +48,7 @@ public class Create implements ECommand {
                                     return 0;
                                 }
                                 ))))
-                        .build());
+        ).build());
     }
     public static Create parse(String[] args){
         Create create = new Create();
