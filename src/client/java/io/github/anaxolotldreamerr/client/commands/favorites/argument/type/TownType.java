@@ -6,7 +6,7 @@ import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 
 public class TownType implements TypeArgument<TownIdentifier>{
     private final Cache<TownIdentifier> cache;
-    private static final String NAME = "town";
+    private static final String NAME = "-t";
     private final static TownType TOWNTYPE = new TownType();
     public TownType(){
         this.cache = Cache.getInstance("favorites/town.json");
