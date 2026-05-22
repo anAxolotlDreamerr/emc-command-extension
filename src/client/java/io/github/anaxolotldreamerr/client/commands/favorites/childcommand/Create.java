@@ -30,11 +30,16 @@ public class Create implements ECommand {
         node.addChild(
                 LiteralArgumentBuilder
                         .<FabricClientCommandSource>literal(NAME)
-                        .then(argument("id", StringArgumentType.word()))
-                        .then(argument("name", StringArgumentType.word()))
+                        .then(argument("name", StringArgumentType.word())
+                                .then(argument("id", StringArgumentType.word())))
                         .executes((context -> {
                             new Thread(()->{
-                                ChatUtil.send(Component.literal(parse(context.getInput().split("\32")).execute()).withStyle(ChatFormatting.GREEN));
+                                String[] temp = context.getInput().split(" ");
+                                String[] temp2 = new String[temp.length-1];
+                                for(int i = 0;i<temp2.length;i++){
+                                    temp2[i] = temp[i+1];
+                                }
+                                ChatUtil.send(Component.literal(parse(temp2).execute()).withStyle(ChatFormatting.GREEN));
                             }).start();
                             return 0;
                         }
