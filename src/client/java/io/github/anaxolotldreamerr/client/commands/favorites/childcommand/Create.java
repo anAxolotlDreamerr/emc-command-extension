@@ -27,23 +27,25 @@ public class Create implements ECommand {
     private Favorites<Identifier> favorites;
     private Create(){};
     public static void register(CommandNode<FabricClientCommandSource> node){
-        node.addChild(
-                LiteralArgumentBuilder
-                        .<FabricClientCommandSource>literal(NAME)
-                        .then(argument("name", StringArgumentType.word())
-                                .then(argument("id", StringArgumentType.word()).executes((context -> {
-                                    new Thread(()->{
-                                        String[] temp = context.getInput().split(" ");
-                                        String[] temp2 = new String[temp.length-1];
-                                        for(int i = 0;i<temp2.length;i++){
-                                            temp2[i] = temp[i+1];
-                                        }
-                                        ChatUtil.send(Component.literal(parse(temp2).execute()).withStyle(ChatFormatting.GREEN));
-                                    }).start();
-                                    return 0;
+        node.addChild(argument("type", StringArgumentType.word())
+                                .suggests((context, builder) -> {
+                                    builder.suggest("-t");
+                                    return builder.buildFuture();
+                                }).then(LiteralArgumentBuilder.<FabricClientCommandSource>literal(NAME).then(argument("name", StringArgumentType.word())
+                        .then(argument("id", StringArgumentType.word()).executes((context -> {
+                            new Thread(()->{
+                                String[] temp = context.getInput().split(" ");
+                                String[] temp2 = new String[temp.length-1];
+                                for(int i = 0;i<temp2.length;i++){
+                                    temp2[i] = temp[i+1];
                                 }
-                                )))
-        ).build());
+                                ChatUtil.send(Component.literal(parse(temp2).execute()).withStyle(ChatFormatting.GREEN));
+                            }).start();
+                            return 0;
+                        }
+                        )))
+                ))
+                        .build());
     }
     public static Create parse(String[] args){
         Create create = new Create();
