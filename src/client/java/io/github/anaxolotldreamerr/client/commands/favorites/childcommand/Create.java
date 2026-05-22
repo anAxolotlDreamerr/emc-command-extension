@@ -31,19 +31,19 @@ public class Create implements ECommand {
                 LiteralArgumentBuilder
                         .<FabricClientCommandSource>literal(NAME)
                         .then(argument("name", StringArgumentType.word())
-                                .then(argument("id", StringArgumentType.word())))
-                        .executes((context -> {
-                            new Thread(()->{
-                                String[] temp = context.getInput().split(" ");
-                                String[] temp2 = new String[temp.length-1];
-                                for(int i = 0;i<temp2.length;i++){
-                                    temp2[i] = temp[i+1];
+                                .then(argument("id", StringArgumentType.word()).executes((context -> {
+                                    new Thread(()->{
+                                        String[] temp = context.getInput().split(" ");
+                                        String[] temp2 = new String[temp.length-1];
+                                        for(int i = 0;i<temp2.length;i++){
+                                            temp2[i] = temp[i+1];
+                                        }
+                                        ChatUtil.send(Component.literal(parse(temp2).execute()).withStyle(ChatFormatting.GREEN));
+                                    }).start();
+                                    return 0;
                                 }
-                                ChatUtil.send(Component.literal(parse(temp2).execute()).withStyle(ChatFormatting.GREEN));
-                            }).start();
-                            return 0;
-                        }
-                        )).build());
+                                ))))
+                        .build());
     }
     public static Create parse(String[] args){
         Create create = new Create();
