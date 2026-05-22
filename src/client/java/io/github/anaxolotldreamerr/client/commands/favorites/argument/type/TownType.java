@@ -1,0 +1,24 @@
+package io.github.anaxolotldreamerr.client.commands.favorites.argument.type;
+
+import io.github.anaxolotldreamerr.client.cache.Cache;
+import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
+
+
+public class TownType implements TypeArgument<TownIdentifier>{
+    private final Cache<TownIdentifier> cache;
+    private static final String NAME = "town";
+    private final static TownType TOWNTYPE = new TownType();
+    public TownType(){
+        this.cache = Cache.getInstance("favorites/town.json");
+    }
+    public static TownType getInstance(){
+        return TOWNTYPE;
+    }
+    public static String name(){
+        return NAME;
+    }
+    @Override
+    public Cache<TownIdentifier> cache() {
+        return cache;
+    }
+}

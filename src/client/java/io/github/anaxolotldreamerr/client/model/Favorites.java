@@ -20,7 +20,6 @@ public final class Favorites <T extends Identifier> {
             , @NotNull @JsonProperty("objects") Set<T> objects) {
         if(id.isEmpty()) throw new IllegalArgumentException("Id can't be empty in the favorites:"+name);
         if(name.isEmpty()) throw new IllegalArgumentException("Name can't be empty in the favorites:"+id);
-        if(objects.isEmpty()) throw new IllegalArgumentException("Objects can't be empty in the favorites:"+id+"-"+name);
         this.name =name;
         this.id = id;
         this.objects = Set.copyOf(objects);
