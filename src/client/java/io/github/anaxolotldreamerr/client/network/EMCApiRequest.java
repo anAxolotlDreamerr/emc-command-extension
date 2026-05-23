@@ -1,5 +1,7 @@
 package io.github.anaxolotldreamerr.client.network;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -126,14 +128,42 @@ public final class EMCApiRequest {
    }
    public static void configure(){
        JsonNode conf;
+       if(!config.exists("config.json")) {
+           try {
+               config.write("config.json",new DefaultConfiguration());
+           } catch (IOException e) {
+               ChatUtil.sendException(e);
+           }
+       }
        try {
            conf = config.read("config.json");
        } catch (IOException e) {
            ChatUtil.sendException(e);
+           try {
+               config.write("config.json",new DefaultConfiguration());
+           } catch (IOException ex) {
+               ChatUtil.sendException(ex);
+           }
+           configure();
            return;
        }
-       townURI = URI.create(conf.get("townURI").asText());
-       nationURI = URI.create(conf.get("nationURI").asText());
-       playerURI = URI.create(conf.get("playerURI").asText());
+       try {
+           townURI = URI.create(conf.get("townURI").asText());
+           nationURI = URI.create(conf.get("nationURI").asText());
+           playerURI = URI.create(conf.get("playerURI").asText());
+       }catch (NullPointerException e){
+           try {
+               config.write("config.json",new DefaultConfiguration());
+           } catch (IOException ex) {
+               ChatUtil.sendException(ex);
+           }
+           configure();
+           ChatUtil.sendException(e);
+       }
+   }
+   private static class DefaultConfiguration{
+        public String townURI = "https://api.earthmc.net/v4/towns";
+        public String nationURI = "https://api.earthmc.net/v4/nations";
+        public String playerURI = "https://api.earthmc.net/v4/players";
    }
 }

@@ -32,10 +32,11 @@ public class ConfigManager {
     }
     public void write(String filePath,Object object) throws IOException {
         Path file = CONFIGDIR.resolve(filePath);
+        if(!Files.exists(file)) {
             Files.createDirectories(file.getParent());
             Files.createFile(file);
+        }
             try {
-
                 if (object != null) mapper
                         .enable(SerializationFeature.INDENT_OUTPUT)
                         .writerFor(object.getClass())
