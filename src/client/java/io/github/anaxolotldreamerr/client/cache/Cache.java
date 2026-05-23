@@ -1,14 +1,18 @@
 package io.github.anaxolotldreamerr.client.cache;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorites;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
+import net.minecraft.network.chat.Component;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Cache<T extends Identifier> {
@@ -20,20 +24,26 @@ public class Cache<T extends Identifier> {
         load();
     }
     public static <U extends Identifier> Cache<U> getInstance(String filePath){
-            return new Cache<>(filePath);
+        return new Cache<>(filePath);
     }
     @SuppressWarnings("unchecked")
     public void load()  {
+        favoritesSet = new HashSet<>();
         ConfigManager manager = new ConfigManager();
         try {
             if (!manager.exists(filePath)) manager.write(filePath, null);
-            favoritesSet = new ObjectMapper()
-                    .readValue(manager
-                            .read(filePath)
-                            .asText(), new TypeReference<>() {
-                    });
+            JsonNode nodes = manager.read(filePath);
+            for(JsonNode node : nodes) {
+                String name = node.get("name").asText();
+                String id = node.get("id").asText();
+                Set<Identifier> identifiers = new HashSet<Identifier>();
+                for (JsonNode object : node.get("objects")) {
+                    identifiers.add(new ObjectMapper().enable(JsonParser.Feature.IGNORE_UNDEFINED).readerFor(Identifier.class).readValue(object.asText()));
+                }
+                favoritesSet.add(new Favorites<T>(name,id,(Set<T>)identifiers));
+            }
         }catch (IOException e){
-            favoritesSet = Collections.EMPTY_SET;
+            ChatUtil.sendException(e);
         }
     }
     public void removeFavorites(Favorites<T> favorites){
@@ -44,10 +54,15 @@ public class Cache<T extends Identifier> {
             throw new  IllegalStateException(e);
         }
     }
-    public void addFavorites(Favorites<T> favorites){
-        favoritesSet.add(favorites);
+    public boolean addFavorites(Favorites<T> favorites){
+        if(!favoritesSet.contains(favorites)) favoritesSet.add(favorites);
+        else {
+            ChatUtil.sendWarning("don't repeat the addition");
+            return false;
+        }
         try {
             new ConfigManager().write(filePath,favoritesSet);
+            return true;
         } catch (IOException e){
             throw new IllegalStateException(e);
         }
