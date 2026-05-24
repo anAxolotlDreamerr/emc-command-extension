@@ -50,7 +50,10 @@ public class Create implements ECommand {
                 ClientCommandManager.literal("create")
                         .then(ClientCommandManager.argument("name",StringArgumentType.word())
                                 .executes(COMMAND)
-                                .then(ClientCommandManager.argument("id",StringArgumentType.word())).executes(COMMAND)
+                                .then(ClientCommandManager.argument("id",StringArgumentType.word())
+                                        .executes(COMMAND)
+                                )
+
                         ).build()
         );
     }
