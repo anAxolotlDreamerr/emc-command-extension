@@ -7,7 +7,7 @@ import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
-import io.github.anaxolotldreamerr.client.model.Favorites;
+import io.github.anaxolotldreamerr.client.model.Favorite;
 
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import io.github.anaxolotldreamerr.client.util.FavoritesUtil;
@@ -26,7 +26,7 @@ import java.util.Collections;
 public class Create implements ECommand {
     private static final String NAME = "create";
     private Cache<Identifier> cache;
-    private Favorites<Identifier> favorites;
+    private Favorite<Identifier> favorite;
     private static final Command<FabricClientCommandSource> COMMAND = (context -> {
         new Thread(()->{
             String[] temp = context.getInput().split(" ");
@@ -61,10 +61,10 @@ public class Create implements ECommand {
         Create create = new Create();
         if(args.length < 3) throw new IllegalArgumentException("The Command is illegal!");
         create.cache = ArgumentFactory.typeArgument(args[0]).cache();
-        if(args.length >=4) create.favorites = new Favorites<Identifier>(args[2]
+        if(args.length >=4) create.favorite = new Favorite<Identifier>(args[2]
                 ,args[3]
                 ,Collections.EMPTY_SET);
-        else create.favorites = new Favorites<Identifier>(args[2]
+        else create.favorite = new Favorite<Identifier>(args[2]
                 ,Integer.valueOf(Integer.sum(1,FavoritesUtil.maxId(create.cache.favoritesSet()))).toString()
                 ,Collections.EMPTY_SET);
         return create;
@@ -72,8 +72,8 @@ public class Create implements ECommand {
     public String name(){return NAME;}
     @Override
     public String execute() {
-        if(cache.addFavorites(favorites)) {
-            return "Successfully add favorites:" + favorites.name() + " to town favorites";
+        if(cache.addFavorites(favorite)) {
+            return "Successfully add favorites:" + favorite.name() + " to town favorites";
         }else {
             return "";
         }

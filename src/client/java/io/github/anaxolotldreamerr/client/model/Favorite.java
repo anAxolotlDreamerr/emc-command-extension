@@ -2,9 +2,6 @@ package io.github.anaxolotldreamerr.client.model;
 
 import com.fasterxml.jackson.annotation.*;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
-import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
-import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
-import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -13,12 +10,12 @@ import java.util.Set;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class Favorites <T extends Identifier> {
+public final class Favorite<T extends Identifier> {
     private final String name;
     private final String id;
     private Set<T> objects;
     @JsonCreator
-    public Favorites(
+    public Favorite(
             @NotNull @JsonProperty("name") String name
             , @NotNull @JsonProperty("id") String id
             ,  @JsonProperty("objects") Set<T> objects) {
@@ -40,19 +37,19 @@ public final class Favorites <T extends Identifier> {
     public Set<T> objects(){
         return objects;
     }
-    public Favorites<T> add(T t){
+    public Favorite<T> add(T t){
         objects.add(t);
         return this;
     }
-    public Favorites<T> remove(T t){
+    public Favorite<T> remove(T t){
         objects.remove(t);
         return this;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Favorites favorites)) return false;
-        return Objects.equals(name, favorites.name) || Objects.equals(id, favorites.id);
+        if (!(o instanceof Favorite favorite)) return false;
+        return Objects.equals(name, favorite.name) || Objects.equals(id, favorite.id);
     }
 
     @Override

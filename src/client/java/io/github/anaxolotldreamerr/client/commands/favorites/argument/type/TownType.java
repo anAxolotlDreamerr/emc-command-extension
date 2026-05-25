@@ -8,8 +8,12 @@ public class TownType implements TypeArgument<TownIdentifier>{
     private final Cache<TownIdentifier> cache;
     private static final String NAME = "-t";
     private final static TownType TOWNTYPE = new TownType();
+    private final static String filePath = "favorites/town.json";
     public TownType(){
-        this.cache = Cache.getInstance("favorites/town.json");
+        this.cache = Cache.getInstance(filePath);
+    }
+    public static String filePath(){
+        return filePath;
     }
     public static TownType getInstance(){
         return TOWNTYPE;

@@ -4,7 +4,9 @@ import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.Argument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 /**
- * 每新增一个实现类都要给ArgumentFactory中的typeNames手动添加对应的name字段及其实例
+ * Obligations must be fulfilled for each new implementation class:
+ * 1.Manually add the corresponding name field and its instance to typeNames in ArgumentFactory
+ * 2.Detection must be manually added in the ChatUtil.showFavoriteList method
  */
 public interface TypeArgument <T extends Identifier> extends Argument {
     Cache<T> cache();

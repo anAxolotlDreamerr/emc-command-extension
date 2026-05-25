@@ -1,34 +1,36 @@
 package io.github.anaxolotldreamerr.client.cache;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
-import io.github.anaxolotldreamerr.client.model.Favorites;
+import io.github.anaxolotldreamerr.client.model.Favorite;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
-import net.minecraft.network.chat.Component;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Cache<T extends Identifier> {
-    private Set<Favorites<T>> favoritesSet;
+    private Set<Favorite<T>> favoriteSet;
     private final String filePath;
 
     public Cache(String filePath) {
         this.filePath = filePath;
         load();
     }
+
+    public String filePath() {
+        return filePath;
+    }
+
     public static <U extends Identifier> Cache<U> getInstance(String filePath){
         return new Cache<>(filePath);
     }
     @SuppressWarnings("unchecked")
     public void load()  {
-        favoritesSet = new HashSet<>();
+        favoriteSet = new HashSet<>();
         ConfigManager manager = new ConfigManager();
         try {
             if (!manager.exists(filePath)) manager.write(filePath, null);
@@ -40,38 +42,38 @@ public class Cache<T extends Identifier> {
                 for (JsonNode object : node.get("objects")) {
                     identifiers.add(new ObjectMapper().enable(JsonParser.Feature.IGNORE_UNDEFINED).readerFor(Identifier.class).readValue(object.asText()));
                 }
-                favoritesSet.add(new Favorites<T>(name,id,(Set<T>)identifiers));
+                favoriteSet.add(new Favorite<T>(name,id,(Set<T>)identifiers));
             }
         }catch (IOException e){
             ChatUtil.sendException(e);
         }
     }
-    public void removeFavorites(Favorites<T> favorites){
-        favoritesSet.remove(favorites);
+    public void removeFavorites(Favorite<T> favorite){
+        favoriteSet.remove(favorite);
         try {
-            new ConfigManager().write(filePath,favoritesSet);
+            new ConfigManager().write(filePath, favoriteSet);
         } catch (IOException e) {
             throw new  IllegalStateException(e);
         }
     }
-    public boolean addFavorites(Favorites<T> favorites){
-        if(!favoritesSet.contains(favorites)) favoritesSet.add(favorites);
+    public boolean addFavorites(Favorite<T> favorite){
+        if(!favoriteSet.contains(favorite)) favoriteSet.add(favorite);
         else {
             ChatUtil.sendWarning("don't repeat the addition");
             return false;
         }
         try {
-            new ConfigManager().write(filePath,favoritesSet);
+            new ConfigManager().write(filePath, favoriteSet);
             return true;
         } catch (IOException e){
             throw new IllegalStateException(e);
         }
     }
-    public Set<Favorites<T>> favoritesSet(){
-        return favoritesSet;
+    public Set<Favorite<T>> favoritesSet(){
+        return favoriteSet;
     }
     public void save() throws IOException{
-        new ConfigManager().write(filePath,favoritesSet);
+        new ConfigManager().write(filePath, favoriteSet);
 
     }
 }

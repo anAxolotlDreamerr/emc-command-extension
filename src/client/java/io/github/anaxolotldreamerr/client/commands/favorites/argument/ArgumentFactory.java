@@ -4,19 +4,9 @@ import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.Natio
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TownType;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class ArgumentFactory {
     private static Map<String,TypeArgument> types = Map.of(
