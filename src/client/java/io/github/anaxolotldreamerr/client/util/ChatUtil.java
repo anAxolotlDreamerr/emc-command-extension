@@ -51,10 +51,10 @@ public class ChatUtil {
                            .literal(
                                    padRightPixels(
                                            mc.font
-                                           ," ".repeat(7)+"name"
-                                           ,7*4)+"|"
+                                           ,"name"
+                                           ,17*4)+"|"
                                            + " ".repeat(7)
-                                           +"id\n"
+                                           +"     id\n"
                            ).withStyle(ChatFormatting.LIGHT_PURPLE)
                    )
            ;
@@ -62,7 +62,7 @@ public class ChatUtil {
                 text.append(Component
                         .literal(padRightPixels(mc.font
                         ,favorite.name()
-                        ,17*4)+"|"+favorite.id()+"\n")
+                        ,17*4)+"|     "+favorite.id()+"\n")
                         .withStyle(ChatFormatting.GREEN)
                 );
            }
