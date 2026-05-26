@@ -44,8 +44,7 @@ public class Create implements ECommand {
     }
     );
     private Create(){};
-    public static void register(CommandNode<FabricClientCommandSource> node){
-
+    public void register(CommandNode<FabricClientCommandSource> node){
         node.addChild(
                 ClientCommandManager.literal("create")
                         .then(ClientCommandManager.argument("name",StringArgumentType.word())
@@ -56,6 +55,9 @@ public class Create implements ECommand {
 
                         ).build()
         );
+    }
+    public static void load(CommandNode<FabricClientCommandSource> node){
+        new Create().register(node);
     }
     public static Create parse(String[] args){
         Create create = new Create();
