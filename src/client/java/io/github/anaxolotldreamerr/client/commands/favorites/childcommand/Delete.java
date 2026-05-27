@@ -65,8 +65,8 @@ public class Delete implements ECommand {
                                                             .keySet())
                                                         builder.suggest(n);
                                                     return builder.buildFuture();
-                                                }))
-                                ).executes(COMMAND)
+                                                })).executes(COMMAND)
+                                )
                         )
                         .build()
         );
