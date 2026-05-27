@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class IDQuery implements QueryArgument {
+    private static final String NAME = "-i";
     @Override
     public <T extends Identifier> Map<String, Favorite<T>> map(Cache<T> cache) {
         Set<Favorite<T>> set = cache.favoritesSet();
@@ -17,5 +18,8 @@ public class IDQuery implements QueryArgument {
             map.put(favorite.id(), favorite);
         }
         return map;
+    }
+    public static String getName(){
+        return NAME;
     }
 }

@@ -28,7 +28,6 @@ public class Create implements ECommand {
     private Cache<Identifier> cache;
     private Favorite<Identifier> favorite;
     private static final Command<FabricClientCommandSource> COMMAND = (context -> {
-        new Thread(()->{
             String[] temp = context.getInput().split(" ");
             String[] temp2 = new String[temp.length-1];
             for(int i = 0;i<temp2.length;i++){
@@ -39,7 +38,6 @@ public class Create implements ECommand {
             }catch (Exception e){
                 ChatUtil.sendException(e);
             }
-        }).start();
         return 0;
     }
     );
