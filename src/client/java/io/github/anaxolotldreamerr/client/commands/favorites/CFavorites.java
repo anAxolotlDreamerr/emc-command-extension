@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
-import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.EMCCommand;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
@@ -17,7 +16,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 //favorites <type>
 public class CFavorites implements EMCCommand {
     private static final CFavorites INSTANCE = new CFavorites();
-    private CFavorites(){};
+    private CFavorites(){}
+
     @Override
     public EMCCommand register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         CommandNode<FabricClientCommandSource> commandNode = dispatcher.register(LiteralArgumentBuilder.literal("favorites"));

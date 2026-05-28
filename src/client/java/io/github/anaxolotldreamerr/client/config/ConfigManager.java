@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;

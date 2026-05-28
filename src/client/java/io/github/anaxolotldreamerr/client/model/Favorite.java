@@ -13,7 +13,7 @@ import java.util.Set;
 public final class Favorite<T extends Identifier> {
     private final String name;
     private final String id;
-    private Set<T> objects;
+    private final Set<T> objects;
     @JsonCreator
     public Favorite(
             @NotNull @JsonProperty("name") String name

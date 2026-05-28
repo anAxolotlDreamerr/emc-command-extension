@@ -1,6 +1,5 @@
 package io.github.anaxolotldreamerr.client.identifier;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 public class PlayerIdentifier implements Identifier {
-    private String name;
-    private String uuid;
+    private final String name;
+    private final String uuid;
     @JsonCreator
     public PlayerIdentifier(@JsonProperty("name") String name,@JsonProperty("uuid") String uuid){
         this.name = name;

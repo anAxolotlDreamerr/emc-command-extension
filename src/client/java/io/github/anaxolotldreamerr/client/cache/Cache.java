@@ -38,11 +38,11 @@ public class Cache<T extends Identifier> {
             for(JsonNode node : nodes) {
                 String name = node.get("name").asText();
                 String id = node.get("id").asText();
-                Set<Identifier> identifiers = new HashSet<Identifier>();
+                Set<Identifier> identifiers = new HashSet<>();
                 for (JsonNode object : node.get("objects")) {
                     identifiers.add(new ObjectMapper().enable(JsonParser.Feature.IGNORE_UNDEFINED).readerFor(Identifier.class).readValue(object.asText()));
                 }
-                favoriteSet.add(new Favorite<T>(name,id,(Set<T>)identifiers));
+                favoriteSet.add(new Favorite<>(name, id, (Set<T>) identifiers));
             }
         }catch (IOException e){
             ChatUtil.sendException(e);
