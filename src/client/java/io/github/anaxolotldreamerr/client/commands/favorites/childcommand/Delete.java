@@ -10,29 +10,41 @@ import io.github.anaxolotldreamerr.client.commands.favorites.argument.query.Name
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
+import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-
-import java.util.function.IntFunction;
-import java.util.function.ToIntFunction;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 //favorites <type> delete [name]/-i [id]/-N [Name]
 //    0        1      2      3    3   4   3    4
 public class Delete implements ECommand {
+    private TypeArgument<Identifier> type;
+    private String[] args;
     private final Command<FabricClientCommandSource> COMMAND = context ->{
-        String[] args = context.getInput().split(" ");
-        TypeArgument<Identifier> type = ArgumentFactory.typeArgument(args[1]);
-        if(args.length<5) {
-            type.cache().removeFavorites(new NameQuery().map(type.cache()).get(args[3]));
-        }else {
-            type.cache().removeFavorites(ArgumentFactory.queryArgument(args[3]).map(type.cache()).get(args[4]));
+        Delete delete = new Delete();
+        delete.args = context.getInput().split(" ");
+        delete.type = ArgumentFactory.typeArgument(args[1]);
+        try {
+            String result = delete.execute();
+            ChatUtil.send(Component.literal(result).withStyle(ChatFormatting.GREEN));
+        }catch (Exception e){
+            ChatUtil.sendException(e);
         }
         return 0;
     };
     private Delete(){}
     @Override
     public String execute() {
-        return "";
+        Favorite<Identifier> favorite;
+        if(args.length<5) {
+            favorite = new NameQuery().map(type.cache()).get(args[3]);
+            type.cache().removeFavorites(favorite);
+        }else {
+            favorite =ArgumentFactory.queryArgument(args[3]).map(type.cache()).get(args[4]);
+            type.cache().removeFavorites(favorite);
+        }
+        return "Delete favorite:"+favorite.name()+" - "+favorite.id();
     }
 
     @Override
