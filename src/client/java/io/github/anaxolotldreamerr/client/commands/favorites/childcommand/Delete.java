@@ -24,7 +24,7 @@ public class Delete implements ECommand {
     private final Command<FabricClientCommandSource> COMMAND = context ->{
         Delete delete = new Delete();
         delete.args = context.getInput().split(" ");
-        delete.type = ArgumentFactory.typeArgument(args[1]);
+        delete.type = ArgumentFactory.typeArgument(delete.args[1]);
         try {
             String result = delete.execute();
             ChatUtil.send(Component.literal(result).withStyle(ChatFormatting.GREEN));
