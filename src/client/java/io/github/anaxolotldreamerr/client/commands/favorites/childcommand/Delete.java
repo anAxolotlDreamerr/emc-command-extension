@@ -43,7 +43,7 @@ public class Delete implements ECommand {
             favorite =ArgumentFactory.queryArgument(args[3]).map(type.cache()).get(args[4]);
             type.cache().removeFavorites(favorite);
         }
-        return "Delete favorite:"+favorite.name()+" - "+favorite.id();
+        return "Delete favorite:"+favorite.name()+" - "+favorite.id()+" successfully";
     }
 
     @Override
