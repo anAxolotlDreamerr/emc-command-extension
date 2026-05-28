@@ -5,7 +5,6 @@ import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.Natio
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TownType;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
-import io.github.anaxolotldreamerr.client.model.Town;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -13,17 +12,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.client.gui.Font;
 
 public class ChatUtil {
-    private static Minecraft mc = Minecraft.getInstance();
+    private static final Minecraft MC = Minecraft.getInstance();
     public static void send(Component component){
         if(component.getString().isEmpty()){ return; }
-        mc.execute(()-> mc.gui.getChat().addMessage(component));
+        MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[EMC]").withStyle(component.getStyle()).append(component)));
     }
     public static void sendException(Exception e){
-        mc.execute(()->mc.gui.getChat().addMessage(Component.literal("[ECE]"+e.getMessage()).withStyle(ChatFormatting.RED)));
+        MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[ECE]"+e.getMessage()).withStyle(ChatFormatting.RED)));
     }
     public static void sendWarning(String warning){
         if(warning.isEmpty()){ return; }
-        mc.execute(()->mc.gui.getChat().addMessage(Component.literal("[ECE]Warning:"+warning).withStyle(ChatFormatting.YELLOW)));
+        MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[ECE]Warning:"+warning).withStyle(ChatFormatting.YELLOW)));
     }
 
     /*
@@ -62,7 +61,7 @@ public class ChatUtil {
                     .append(Component
                             .literal(
                                     padRightPixels(
-                                            mc.font
+                                            MC.font
                                             ,"      [name]"
                                             ,17*4)+"|"
                                             + " ".repeat(7)
@@ -72,7 +71,7 @@ public class ChatUtil {
             ;
             for(Favorite<Identifier> favorite : cache.favoritesSet()){
                 text.append(Component
-                        .literal(padRightPixels(mc.font
+                        .literal(padRightPixels(MC.font
                                 ,favorite.name()
                                 ,17*4)+"|     "+favorite.id()+"\n")
                         .withStyle(ChatFormatting.GREEN)
@@ -85,7 +84,7 @@ public class ChatUtil {
                             .literal("=".repeat(35))
                             .withStyle(ChatFormatting.YELLOW)
                     );
-        mc.execute(()->mc.gui.getChat().addMessage((Component) text));
+        MC.execute(()-> MC.gui.getChat().addMessage(text));
     }
     private static String padRightPixels(
             Font font,
