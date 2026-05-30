@@ -13,6 +13,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = NationIdentifier.class, name = "nation"),
         @JsonSubTypes.Type(value = PlayerIdentifier.class,name = "player")
 })
+/**
+ * Every ECommand implementation class must follow these conventions:
+ * 1.A dedicated method for obtaining relevant Identifiers is set in the EMCApiRequest class
+ */
 public interface Identifier {
     String name();
     String uuid();

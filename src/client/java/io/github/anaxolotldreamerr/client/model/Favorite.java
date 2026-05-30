@@ -1,9 +1,11 @@
 package io.github.anaxolotldreamerr.client.model;
 
 import com.fasterxml.jackson.annotation.*;
+import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -37,12 +39,31 @@ public final class Favorite<T extends Identifier> {
     public Set<T> objects(){
         return objects;
     }
-    public Favorite<T> add(T t){
+    public Favorite<T> add(T t,Cache<T> cache){
         objects.add(t);
+        try {
+            cache.save();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can't save the change");
+        }
         return this;
     }
-    public Favorite<T> remove(T t){
+    public Favorite<T> addAll(Set<T> objects, Cache<T> cache){
+        this.objects.addAll(objects);
+        try {
+            cache.save();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can't save the change");
+        }
+        return this;
+    }
+    public Favorite<T> remove(T t,Cache<T> cache){
         objects.remove(t);
+        try {
+            cache.save();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can't save the change");
+        }
         return this;
     }
 

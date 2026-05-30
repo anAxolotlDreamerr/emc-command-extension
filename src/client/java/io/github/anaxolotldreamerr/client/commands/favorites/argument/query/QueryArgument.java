@@ -1,9 +1,17 @@
 package io.github.anaxolotldreamerr.client.commands.favorites.argument.query;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.Argument;
+import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
+import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.Map;
 /**
@@ -11,5 +19,17 @@ import java.util.Map;
  * 1.Manually add the corresponding name field and its instance to query in ArgumentFactory
  */
 public interface QueryArgument extends Argument {
+    RequiredArgumentBuilder<FabricClientCommandSource,String> query = ClientCommandManager
+                    .argument("query", StringArgumentType.word())
+                    .suggests((context,suggestionsBuilder)->{
+                        for(String query : ArgumentFactory.getAllQueryName())
+                            suggestionsBuilder.suggest(query);
+                        String[] args = context.getInput().split(" ");
+                        TypeArgument<Identifier> type = ArgumentFactory.typeArgument(args[1]);
+                        for(Favorite<Identifier> favorite : type.cache().favoritesSet()){
+                            suggestionsBuilder.suggest(favorite.name());
+                        }
+                        return suggestionsBuilder.buildFuture();
+                    });
     <T extends Identifier> Map<String, Favorite<T>> map(Cache<T> cache);
 }

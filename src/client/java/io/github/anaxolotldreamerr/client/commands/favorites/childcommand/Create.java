@@ -21,7 +21,7 @@ import java.util.Collections;
 
 
 
-//format:<type> create [Name] ([id])
+//format:<type> create [Name] ([id]) (4)
 //          0     1      2       3
 public class Create implements ECommand {
     private static final String NAME = "create";
