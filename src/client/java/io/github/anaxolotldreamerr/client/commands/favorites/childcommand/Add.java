@@ -90,7 +90,7 @@ public class Add implements ECommand {
     public void register(CommandNode<FabricClientCommandSource> node) {
         node.addChild(ClientCommandManager.literal("add").build());
         CommandNode<FabricClientCommandSource> add = node.getChild("add");
-        add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.SEARCH_WITH_QUERY.get().executes(COMMAND)).build());
+        add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.SEARCH_WITH_DEFAULT_QUERY.get().executes(COMMAND)).build());
         add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.DEFAULT_SEARCH.get().executes(COMMAND)).build());
         for(LiteralArgumentBuilder<FabricClientCommandSource> liter : QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.SEARCH_WITH_QUERY.get().executes(COMMAND)))
             add.addChild(liter.build());

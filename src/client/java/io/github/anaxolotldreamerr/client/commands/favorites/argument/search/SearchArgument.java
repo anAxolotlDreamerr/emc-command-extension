@@ -67,7 +67,6 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                     .suggests(((context, builder) -> {
                         String args[] = context.getInput().split(" ");
                         for(Identifier identifier : ArgumentFactory.searchArgument(args[5]).getAll()){
-                            ChatUtil.sendWarning(identifier.toString());
                             builder.suggest(identifier.name());
                         }
                         return builder.buildFuture();

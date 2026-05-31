@@ -99,7 +99,6 @@ public final class EMCApiRequest {
             return Collections.EMPTY_SET;
         }
         try {
-            ChatUtil.sendWarning("send");
             Set<TownIdentifier> townIdentifiers = new HashSet<>();
             JsonNode json = MAPPER.readTree(towns);
             for(JsonNode node : json){
