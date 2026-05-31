@@ -1,5 +1,6 @@
 package io.github.anaxolotldreamerr.client.commands.favorites.argument.search;
 
+import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
@@ -22,7 +23,7 @@ public class TownSearch implements SearchArgument<TownIdentifier> {
     }
     @Override
     public Set<TownIdentifier> getAll(){
-        return EMCApiRequest.getTownIdentifiers();
+        return Cache.townIdentifiers();
     }
     public static String getName(){
         return NAME;

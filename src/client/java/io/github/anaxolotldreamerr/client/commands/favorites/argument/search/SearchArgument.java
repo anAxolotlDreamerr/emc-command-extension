@@ -7,11 +7,14 @@ import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFa
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
+import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import javax.print.DocFlavor;
 import java.util.Set;
+import java.util.function.Supplier;
+
 /**
  * Obligations must be fulfilled for each new implementation class:
  * 1.Manually add the corresponding name field and its instance to search in ArgumentFactory
@@ -27,8 +30,8 @@ import java.util.Set;
         0       1           2           3       4
 */
 public interface SearchArgument<T extends Identifier> extends Argument {
-    RequiredArgumentBuilder<FabricClientCommandSource,String> DEFAULT_SEARCH = ClientCommandManager
-            .argument("search",StringArgumentType.word())
+    Supplier<RequiredArgumentBuilder<FabricClientCommandSource,String>> DEFAULT_SEARCH =()-> ClientCommandManager
+            .argument("object",StringArgumentType.word())
             .suggests(((context, builder) -> {
                 String args[] = context.getInput().split(" ");
                 String type = args[1];
@@ -37,7 +40,7 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                 }
                 return builder.buildFuture();
             }));
-    RequiredArgumentBuilder<FabricClientCommandSource,String> SEARCH_WITH_DEFAULT_QUERY = ClientCommandManager
+    Supplier<RequiredArgumentBuilder<FabricClientCommandSource,String>> SEARCH_WITH_DEFAULT_QUERY =()-> ClientCommandManager
             .argument("search", StringArgumentType.word())
             .suggests(((context, builder) -> {
                 for(String arg : ArgumentFactory.getAllSearchName())
@@ -53,7 +56,7 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                         return builder.buildFuture();
                     }))
             );
-    RequiredArgumentBuilder<FabricClientCommandSource,String> SEARCH_WITH_QUERY = ClientCommandManager
+    Supplier<RequiredArgumentBuilder<FabricClientCommandSource,String>> SEARCH_WITH_QUERY =()-> ClientCommandManager
             .argument("search", StringArgumentType.word())
             .suggests(((context, builder) -> {
                 for(String arg : ArgumentFactory.getAllSearchName())
@@ -64,6 +67,7 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                     .suggests(((context, builder) -> {
                         String args[] = context.getInput().split(" ");
                         for(Identifier identifier : ArgumentFactory.searchArgument(args[5]).getAll()){
+                            ChatUtil.sendWarning(identifier.toString());
                             builder.suggest(identifier.name());
                         }
                         return builder.buildFuture();

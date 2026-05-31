@@ -49,7 +49,7 @@ public final class EMCApiRequest {
     public static Set<PlayerIdentifier> getPlayerIdentifiers(){
         String players;
         try {
-            players = request(playerURI,"");
+            players = request(playerURI,null);
             if(players == null){
                 ChatUtil.sendException(new Exception("PlayerIdentifiers json are null!"));
                 return Collections.EMPTY_SET;
@@ -69,7 +69,7 @@ public final class EMCApiRequest {
     public static Set<NationIdentifier> getNationIdentifiers(){
         String nations;
         try {
-            nations = request(nationURI,"");
+            nations = request(nationURI,null);
             if(nations == null){
                 ChatUtil.sendException(new Exception("NationIdentifiers json are null!"));
                 return Collections.EMPTY_SET;
@@ -89,7 +89,7 @@ public final class EMCApiRequest {
     public static Set<TownIdentifier> getTownIdentifiers(){
         String towns;
         try {
-            towns = request(townURI,"");
+            towns = request(townURI,null);
             if(towns == null){
                 ChatUtil.sendException(new IllegalArgumentException("TownIdentifiers json are null!"));
                 return Collections.EMPTY_SET;
@@ -99,11 +99,15 @@ public final class EMCApiRequest {
             return Collections.EMPTY_SET;
         }
         try {
-            return MAPPER.readValue(towns, new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            ChatUtil.send(Component.literal("Can't deserialize the TownIdentifier").withStyle(ChatFormatting.RED));
-            return Collections.EMPTY_SET;
+            ChatUtil.sendWarning("send");
+            Set<TownIdentifier> townIdentifiers = new HashSet<>();
+            JsonNode json = MAPPER.readTree(towns);
+            for(JsonNode node : json){
+                townIdentifiers.add(new TownIdentifier(node.get("name").asText(),node.get("uuid").asText()));
+            }
+            return townIdentifiers;
+        }  catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     public static String request(URI URI,String post) throws IOException {
@@ -111,10 +115,18 @@ public final class EMCApiRequest {
             ChatUtil.sendException(new IllegalArgumentException("The URI is null!"));
             return null;
         }
-       HttpRequest request = HttpRequest.newBuilder()
-               .uri(URI)
-               .POST(HttpRequest.BodyPublishers.ofString(post))
-               .build();
+        HttpRequest request;
+        if(post!=null) {
+            request = HttpRequest.newBuilder()
+                    .uri(URI)
+                    .POST(HttpRequest.BodyPublishers.ofString(post))
+                    .build();
+        }else {
+            request = HttpRequest.newBuilder()
+                    .uri(URI)
+                    .GET()
+                    .build();
+        }
        HttpResponse<String> response;
        try {
            response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());

@@ -5,17 +5,44 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
+import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
+import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
+import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Cache<T extends Identifier> {
     private Set<Favorite<T>> favoriteSet;
     private final String filePath;
+    private static volatile Set<TownIdentifier> townIdentifiers;
+    private static ScheduledExecutorService scheduler =
+            Executors.newSingleThreadScheduledExecutor();
+    private static boolean isStarting = false;
+    public static void start(){
+            isStarting=true;
+            scheduler.scheduleAtFixedRate(() -> {
+                try {
+                    townIdentifiers = EMCApiRequest.getTownIdentifiers();
+                    ChatUtil.sendWarning(townIdentifiers.toString());
+                }catch (Exception e){
+                    ChatUtil.sendException(e);
+                }
 
+            }, 0, 10, TimeUnit.SECONDS);
+    }
+    public static synchronized void update(Set<TownIdentifier> townIdentifiers){
+        townIdentifiers = Set.copyOf(townIdentifiers);
+    }
+    public static synchronized Set<TownIdentifier> townIdentifiers(){
+        return Set.copyOf(townIdentifiers);
+    }
     public Cache(String filePath) {
         this.filePath = filePath;
         load();

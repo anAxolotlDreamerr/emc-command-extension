@@ -1,5 +1,6 @@
 package io.github.anaxolotldreamerr.client;
 
+import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.CommandRegistry;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import net.fabricmc.api.ClientModInitializer;
@@ -13,6 +14,7 @@ public class EmcCommandExtensionClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		CommandRegistry.register();
 		EMCApiRequest.configure();
+		Cache.start();
 		LOGGER.info("Hello Fabric");
 	}
 }

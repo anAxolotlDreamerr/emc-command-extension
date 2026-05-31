@@ -2,6 +2,7 @@ package io.github.anaxolotldreamerr.client.commands.favorites.childcommand;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
@@ -12,6 +13,7 @@ import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeA
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
+import io.github.anaxolotldreamerr.client.util.ArgumentUtil;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import io.github.anaxolotldreamerr.client.util.SearchUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -86,33 +88,15 @@ public class Add implements ECommand {
 
     @Override
     public void register(CommandNode<FabricClientCommandSource> node) {
-        node.addChild(
-                ClientCommandManager
-                        .literal("add")
-                        .then(QueryArgument
-                                .DEFAULT_QUERY
-                                .then(
-                                        SearchArgument.DEFAULT_SEARCH
-                                                .executes(COMMAND)
-                                )
-                                .then(
-                                        SearchArgument.SEARCH_WITH_DEFAULT_QUERY
-                                                .executes(COMMAND)
-                                )
-                        )
-                        .then(QueryArgument
-                                .QUERY
-                                .then(
-                                        SearchArgument.DEFAULT_SEARCH
-                                                .executes(COMMAND)
-                                )
-                                .then(
-                                        SearchArgument.SEARCH_WITH_QUERY
-                                                .executes(COMMAND)
-                                )
-                        )
-                        .build()
-        );
+        node.addChild(ClientCommandManager.literal("add").build());
+        CommandNode<FabricClientCommandSource> add = node.getChild("add");
+        add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.SEARCH_WITH_QUERY.get().executes(COMMAND)).build());
+        add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.DEFAULT_SEARCH.get().executes(COMMAND)).build());
+        for(LiteralArgumentBuilder<FabricClientCommandSource> liter : QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.SEARCH_WITH_QUERY.get().executes(COMMAND)))
+            add.addChild(liter.build());
+        for(LiteralArgumentBuilder<FabricClientCommandSource> liter : QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.DEFAULT_SEARCH.get().executes(COMMAND)))
+            add.addChild(liter.build());
+
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
         new Add().register(node);
