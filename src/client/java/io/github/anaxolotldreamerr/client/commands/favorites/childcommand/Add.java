@@ -25,17 +25,19 @@ import java.util.Set;
 /*
 favorites <type> add <query> [favorite] <search> [object] (7)
     0       1     2     3        4         5        6
-favorites <type> add [name] <search> [object] (6)
-    0       1     2     3       4       5
-favorites <type> add [name] [object] (5)
-    0       1     2     3       4
+favorites <type> add [favorite] [search] [object] (6)
+    0       1     2     3          4        5
+favorites <type> add <query> [favorite] [object] (6)
+    0       1     2     3       4           5
+favorites <type> add [favorite] [object] (5)
+    0       1     2     3          4
 */
 public class Add implements ECommand {
     private Favorite<Identifier> favorite;
     private Cache<Identifier> cache;
     private Set<Identifier> objects;
     private final Command<FabricClientCommandSource> COMMAND = (context -> {
-       String[] args = context.getInput().split(" ");
+        String[] args = context.getInput().split(" ");
         TypeArgument<Identifier> type = ArgumentFactory.typeArgument(args[1]);
         Add add = new Add();
         QueryArgument query = ArgumentFactory.queryArgument(args[3]);
@@ -44,17 +46,23 @@ public class Add implements ECommand {
         SearchArgument<Identifier> search;
         if(args.length == 5){
             add.favorite = map.get(args[3]);
-            search = ArgumentFactory.searchArgument(args[4],args[1]);
+            search = ArgumentFactory.defaultSearchArgument(args[1]);
             add.objects = search.lookup(SearchUtil.search(search.getAll(),args[4]));
         }
         if (args.length == 6){
-            add.favorite = map.get(args[3]);
-            search = ArgumentFactory.searchArgument(args[4],args[1]);
-            add.objects = search.lookup(SearchUtil.search(search.getAll(),args[5]));
+            if(!ArgumentFactory.getAllSearchName().contains(args[4])) {
+                add.favorite = map.get(args[4]);
+                search = ArgumentFactory.defaultSearchArgument(args[1]);
+                add.objects = search.lookup(SearchUtil.search(search.getAll(), args[5]));
+            }else {
+                add.favorite = map.get(args[3]);
+                search = ArgumentFactory.searchArgument(args[4]);
+                add.objects = search.lookup(SearchUtil.search(search.getAll(),args[5]));
+            }
         }
         if(args.length == 7){
             add.favorite = map.get(args[4]);
-            search = ArgumentFactory.searchArgument(args[5],args[1]);
+            search = ArgumentFactory.searchArgument(args[5]);
             add.objects = search.lookup(SearchUtil.search(search.getAll(),args[6]));
         }
         try {
@@ -81,32 +89,26 @@ public class Add implements ECommand {
         node.addChild(
                 ClientCommandManager
                         .literal("add")
-                        .then(QueryArgument.query
-                                .then(ClientCommandManager
-                                        .argument("search",StringArgumentType.word())
-                                        .suggests(((context, builder) -> {
-                                            String args[] = context.getInput().split(" ");
-                                            String type = args[1];
-                                            for(String search : ArgumentFactory.getAllSearchName()){
-                                                builder.suggest(search);
-                                            }
-                                            for(Identifier identifier : ArgumentFactory.searchArgument(type,type).getAll()){
-                                                builder.suggest(identifier.name());
-                                            }
-                                            return builder.buildFuture();
-                                        }))
-                                        .executes(COMMAND)
-                                        .then(ClientCommandManager
-                                                .argument("search",StringArgumentType.word())
-                                                .suggests(((context, builder) -> {
-                                                    String args[] = context.getInput().split(" ");
-                                                    String type = args[1];
-                                                    for(Identifier identifier : ArgumentFactory.searchArgument(type,type).getAll()){
-                                                        builder.suggest(identifier.name());
-                                                    }
-                                                    return builder.buildFuture();
-                                                })))
-                                        .executes(COMMAND)
+                        .then(QueryArgument
+                                .DEFAULT_QUERY
+                                .then(
+                                        SearchArgument.DEFAULT_SEARCH
+                                                .executes(COMMAND)
+                                )
+                                .then(
+                                        SearchArgument.SEARCH_WITH_DEFAULT_QUERY
+                                                .executes(COMMAND)
+                                )
+                        )
+                        .then(QueryArgument
+                                .QUERY
+                                .then(
+                                        SearchArgument.DEFAULT_SEARCH
+                                                .executes(COMMAND)
+                                )
+                                .then(
+                                        SearchArgument.SEARCH_WITH_QUERY
+                                                .executes(COMMAND)
                                 )
                         )
                         .build()

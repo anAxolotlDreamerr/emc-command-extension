@@ -57,22 +57,12 @@ public class Delete implements ECommand {
                 ClientCommandManager
                         .literal("delete")
                         .then(
-                                QueryArgument.query.executes(COMMAND)
-                                .then(
-                                        ClientCommandManager
-                                                .argument("favorite",StringArgumentType.word())
-                                                .suggests(((context, builder) -> {
-                                                    String[] args = context.getInput().split(" ");
-                                                    for (String n : ArgumentFactory
-                                                                 .queryArgument(args[3])
-                                                                 .map(ArgumentFactory
-                                                                         .typeArgument(args[1])
-                                                                         .cache())
-                                                            .keySet())
-                                                        builder.suggest(n);
-                                                    return builder.buildFuture();
-                                                })).executes(COMMAND)
-                                )).build()
+                                QueryArgument.DEFAULT_QUERY.executes(COMMAND)
+                        )
+                        .then(
+                                QueryArgument.QUERY.executes(COMMAND)
+                        )
+                        .build()
         );
     }
     public static void load(CommandNode<FabricClientCommandSource> node){

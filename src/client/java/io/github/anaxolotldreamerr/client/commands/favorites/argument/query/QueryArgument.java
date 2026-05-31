@@ -19,11 +19,9 @@ import java.util.Map;
  * 1.Manually add the corresponding name field and its instance to query in ArgumentFactory
  */
 public interface QueryArgument extends Argument {
-    RequiredArgumentBuilder<FabricClientCommandSource,String> query = ClientCommandManager
+    RequiredArgumentBuilder<FabricClientCommandSource,String> DEFAULT_QUERY = ClientCommandManager
                     .argument("query", StringArgumentType.word())
                     .suggests((context,suggestionsBuilder)->{
-                        for(String query : ArgumentFactory.getAllQueryName())
-                            suggestionsBuilder.suggest(query);
                         String[] args = context.getInput().split(" ");
                         TypeArgument<Identifier> type = ArgumentFactory.typeArgument(args[1]);
                         for(Favorite<Identifier> favorite : type.cache().favoritesSet()){
@@ -31,5 +29,32 @@ public interface QueryArgument extends Argument {
                         }
                         return suggestionsBuilder.buildFuture();
                     });
+    RequiredArgumentBuilder<FabricClientCommandSource,String> QUERY = ClientCommandManager
+            .argument("query", StringArgumentType.word())
+            .suggests((context,suggestionsBuilder)->{
+                for(String arg : ArgumentFactory.getAllQueryName())
+                    suggestionsBuilder.suggest(arg);
+                String[] args = context.getInput().split(" ");
+                TypeArgument<Identifier> type = ArgumentFactory.typeArgument(args[1]);
+                for(Favorite<Identifier> favorite : type.cache().favoritesSet()){
+                    suggestionsBuilder.suggest(favorite.name());
+                }
+                return suggestionsBuilder.buildFuture();
+            })
+            .then(
+                    ClientCommandManager
+                            .argument("favorite",StringArgumentType.word())
+                            .suggests(((context, builder) -> {
+                                String[] args = context.getInput().split(" ");
+                                for (String n : ArgumentFactory
+                                        .queryArgument(args[3])
+                                        .map(ArgumentFactory
+                                                .typeArgument(args[1])
+                                                .cache())
+                                        .keySet())
+                                    builder.suggest(n);
+                                return builder.buildFuture();
+                            }))
+            );;
     <T extends Identifier> Map<String, Favorite<T>> map(Cache<T> cache);
 }

@@ -91,7 +91,7 @@ public final class EMCApiRequest {
         try {
             towns = request(townURI,"");
             if(towns == null){
-                ChatUtil.sendException(new Exception("TownIdentifiers json are null!"));
+                ChatUtil.sendException(new IllegalArgumentException("TownIdentifiers json are null!"));
                 return Collections.EMPTY_SET;
             }
         } catch (IOException e) {

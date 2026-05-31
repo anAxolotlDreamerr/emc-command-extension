@@ -26,6 +26,9 @@ public class ArgumentFactory {
     private final static Map<String, SearchArgument> SEARCH = Map.of(
             TownSearch.getName(),new TownSearch()
     );
+    private final static Map<String , SearchArgument> DEFAULT_SEARCH = Map.of(
+            TownType.name(),new TownSearch()
+    );
     private ArgumentFactory(){};
     public static <T extends Identifier> TypeArgument<T> typeArgument(String arg){
         if(TYPES.containsKey(arg)){
@@ -39,11 +42,17 @@ public class ArgumentFactory {
         }
         return QUERY.get(NameQuery.getName());
     }
-    public static <T extends Identifier> SearchArgument<T> searchArgument(String arg,String type){
+    public static <T extends Identifier> SearchArgument<T> searchArgument(String arg){
         if(SEARCH.containsKey(arg)){
             return (SearchArgument<T>) SEARCH.get(arg);
         }
-        return (SearchArgument<T>) SEARCH.get(type);
+        throw new NullPointerException("Unknown search:"+arg);
+    }
+    public static <T extends Identifier> SearchArgument<T> defaultSearchArgument(String type){
+        if(DEFAULT_SEARCH.containsKey(type)){
+            return (SearchArgument<T>) DEFAULT_SEARCH.get(type);
+        }
+        throw new NullPointerException("The type:"+type+" dose not have default search");
     }
     public static Argument stringArgument(){
         return new Argument(){};
