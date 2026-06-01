@@ -59,8 +59,12 @@ public final class EMCApiRequest {
             return Collections.EMPTY_SET;
         }
         try {
-            return MAPPER.readValue(players, new TypeReference<>() {
-            });
+            Set<PlayerIdentifier> identifiers = new HashSet<>();
+            JsonNode json = MAPPER.readTree(players);
+            for(JsonNode node : json){
+                identifiers.add(new PlayerIdentifier(node.get("name").asText(),node.get("uuid").asText()));
+            }
+            return identifiers;
         } catch (JsonProcessingException e) {
             ChatUtil.send(Component.literal("Can't deserialize the PlayerIdentifier").withStyle(ChatFormatting.RED));
             return Collections.EMPTY_SET;
@@ -79,9 +83,13 @@ public final class EMCApiRequest {
             return Collections.EMPTY_SET;
         }
         try {
-            return MAPPER.readValue(nations, new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
+            Set<NationIdentifier> identifiers = new HashSet<>();
+            JsonNode json = MAPPER.readTree(nations);
+            for(JsonNode node : json){
+                identifiers.add(new NationIdentifier(node.get("name").asText(),node.get("uuid").asText()));
+            }
+            return identifiers;
+            } catch (JsonProcessingException e) {
             ChatUtil.send(Component.literal("Can't deserialize the NationIdentifier").withStyle(ChatFormatting.RED));
             return Collections.EMPTY_SET;
         }

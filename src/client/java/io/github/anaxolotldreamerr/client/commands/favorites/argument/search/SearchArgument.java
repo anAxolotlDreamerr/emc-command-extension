@@ -4,14 +4,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.Argument;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
-import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
-import io.github.anaxolotldreamerr.client.model.Favorite;
-import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
-import javax.print.DocFlavor;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -33,10 +29,12 @@ public interface SearchArgument<T extends Identifier> extends Argument {
     Supplier<RequiredArgumentBuilder<FabricClientCommandSource,String>> DEFAULT_SEARCH =()-> ClientCommandManager
             .argument("object",StringArgumentType.word())
             .suggests(((context, builder) -> {
-                String args[] = context.getInput().split(" ");
+                String[] args = context.getInput().split(" ");
                 String type = args[1];
+                String start = args[args.length-1];
                 for(Identifier identifier : ArgumentFactory.searchArgument(type).getAll()){
-                    builder.suggest(identifier.name());
+                    if(identifier.name().startsWith(start))
+                        builder.suggest(identifier.name());
                 }
                 return builder.buildFuture();
             }));
@@ -49,9 +47,11 @@ public interface SearchArgument<T extends Identifier> extends Argument {
             })).then(ClientCommandManager
                     .argument("object",StringArgumentType.word())
                     .suggests(((context, builder) -> {
-                        String args[] = context.getInput().split(" ");
+                        String[] args = context.getInput().split(" ");
+                        String start = args[args.length-1];
                         for(Identifier identifier : ArgumentFactory.searchArgument(args[4]).getAll()){
-                            builder.suggest(identifier.name());
+                            if(identifier.name().startsWith(start))
+                                builder.suggest(identifier.name());
                         }
                         return builder.buildFuture();
                     }))
@@ -65,9 +65,11 @@ public interface SearchArgument<T extends Identifier> extends Argument {
             })).then(ClientCommandManager
                     .argument("object",StringArgumentType.word())
                     .suggests(((context, builder) -> {
-                        String args[] = context.getInput().split(" ");
+                        String[] args = context.getInput().split(" ");
+                        String start = args[args.length-1];
                         for(Identifier identifier : ArgumentFactory.searchArgument(args[5]).getAll()){
-                            builder.suggest(identifier.name());
+                            if(identifier.name().startsWith(start))
+                                builder.suggest(identifier.name());
                         }
                         return builder.buildFuture();
                     }))

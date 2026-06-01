@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
+import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
+import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
+import io.github.anaxolotldreamerr.client.model.Player;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 
@@ -21,6 +24,8 @@ public class Cache<T extends Identifier> {
     private Set<Favorite<T>> favoriteSet;
     private final String filePath;
     private static volatile Set<TownIdentifier> townIdentifiers;
+    private static volatile Set<NationIdentifier> nationIdentifiers;
+    private static volatile Set<PlayerIdentifier> playerIdentifiers;
     private static ScheduledExecutorService scheduler =
             Executors.newSingleThreadScheduledExecutor();
     private static boolean isStarting = false;
@@ -38,6 +43,8 @@ public class Cache<T extends Identifier> {
         updateDate = new Date(System.currentTimeMillis());
         try {
             townIdentifiers = EMCApiRequest.getTownIdentifiers();
+            nationIdentifiers = EMCApiRequest.getNationIdentifiers();
+            playerIdentifiers = EMCApiRequest.getPlayerIdentifiers();
         } catch (Exception e) {
             ChatUtil.sendException(e);
         }
