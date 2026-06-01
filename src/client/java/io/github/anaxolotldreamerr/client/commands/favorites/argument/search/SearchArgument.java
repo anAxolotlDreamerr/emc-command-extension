@@ -8,6 +8,7 @@ import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -32,9 +33,20 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                 String[] args = context.getInput().split(" ");
                 String type = args[1];
                 String start = args[args.length-1];
+                Set<String> conform =new HashSet<>();
                 for(Identifier identifier : ArgumentFactory.searchArgument(type).getAll()){
-                    if(identifier.name().startsWith(start))
-                        builder.suggest(identifier.name());
+                    if(identifier.name().toLowerCase().startsWith(start.toLowerCase())) {
+                        conform.add(identifier.name().toLowerCase());
+                    }
+                }
+                if(conform.isEmpty()) {
+                    for (Identifier identifier : ArgumentFactory.searchArgument(type).getAll()) {
+                        builder.suggest(identifier.name().toLowerCase());
+                    }
+                }else {
+                    for (String name : conform){
+                        builder.suggest(name);
+                    }
                 }
                 return builder.buildFuture();
             }));
@@ -49,9 +61,20 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                     .suggests(((context, builder) -> {
                         String[] args = context.getInput().split(" ");
                         String start = args[args.length-1];
+                        Set<String> conform =new HashSet<>();
                         for(Identifier identifier : ArgumentFactory.searchArgument(args[4]).getAll()){
-                            if(identifier.name().startsWith(start))
-                                builder.suggest(identifier.name());
+                            if(identifier.name().toLowerCase().startsWith(start.toLowerCase())) {
+                                conform.add(identifier.name().toLowerCase());
+                            }
+                        }
+                        if(conform.isEmpty()) {
+                            for (Identifier identifier : ArgumentFactory.searchArgument(args[4]).getAll()) {
+                                builder.suggest(identifier.name().toLowerCase());
+                            }
+                        }else {
+                            for (String name : conform){
+                                builder.suggest(name);
+                            }
                         }
                         return builder.buildFuture();
                     }))
@@ -67,9 +90,20 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                     .suggests(((context, builder) -> {
                         String[] args = context.getInput().split(" ");
                         String start = args[args.length-1];
+                        Set<String> conform =new HashSet<>();
                         for(Identifier identifier : ArgumentFactory.searchArgument(args[5]).getAll()){
-                            if(identifier.name().startsWith(start))
-                                builder.suggest(identifier.name());
+                            if(identifier.name().toLowerCase().startsWith(start.toLowerCase())) {
+                                conform.add(identifier.name().toLowerCase());
+                            }
+                        }
+                        if(conform.isEmpty()) {
+                            for (Identifier identifier : ArgumentFactory.searchArgument(args[5]).getAll()) {
+                                    builder.suggest(identifier.name().toLowerCase());
+                            }
+                        }else {
+                            for (String name : conform){
+                                builder.suggest(name);
+                            }
                         }
                         return builder.buildFuture();
                     }))
