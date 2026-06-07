@@ -31,7 +31,15 @@ public class CUpdate implements EMCCommand {
                                 ChatUtil.sendException(e);
                             }
                             return 0;
-                }))));
+                })).then(ClientCommandManager.literal("others").executes(commandContext -> {
+                    try {
+                        Cache.updateObjects();
+                        ChatUtil.send(Component.literal("Successfully update").withStyle(ChatFormatting.LIGHT_PURPLE));
+                    }catch (Exception e){
+                        ChatUtil.sendException(e);
+                    }
+                    return 0;
+                        }))));
         return this;
     }
     public static CUpdate getInstance(){

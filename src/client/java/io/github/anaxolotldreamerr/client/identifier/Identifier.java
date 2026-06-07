@@ -3,6 +3,8 @@ package io.github.anaxolotldreamerr.client.identifier;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.List;
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -20,4 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public interface Identifier {
     String name();
     String uuid();
+    default List<String> toList(){
+        return List.of(name(),uuid());
+    };
 }

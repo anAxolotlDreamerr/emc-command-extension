@@ -2,6 +2,7 @@ package io.github.anaxolotldreamerr.client.util;
 
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.NationType;
+import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.PlayerType;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TownType;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
@@ -39,6 +40,8 @@ public class ChatUtil {
             showFavoriteList(cache,"message.emccommandextension.favorite.list.town");
         }else if(cache.filePath().equals(NationType.filePath())){
             showFavoriteList(cache,"message.emccommandextension.favorite.list.nation");
+        }else if(cache.filePath().equals(PlayerType.filePath())){
+            showFavoriteList(cache,"message.emccommandextension.favorite.list.player");
         }
         else {
             throw new IllegalArgumentException("Unknown filePath:"+cache.filePath());

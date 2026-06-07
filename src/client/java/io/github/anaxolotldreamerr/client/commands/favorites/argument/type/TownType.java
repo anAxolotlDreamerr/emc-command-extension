@@ -25,4 +25,9 @@ public class TownType implements TypeArgument<TownIdentifier>{
     public Cache<TownIdentifier> cache() {
         return cache;
     }
+
+    @Override
+    public String toString() {
+        return NAME;
+    }
 }

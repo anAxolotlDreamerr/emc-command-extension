@@ -7,33 +7,33 @@ import java.util.Objects;
 public final class Coordinate {
 
     private final int x;
-    private final int y;
+    private final int z;
     public Coordinate(int x, int y){
         this.x =x;
-        this.y =y;
+        this.z =y;
     }
     public int getX() {
         return x;
     }
 
-    public int getY() {
-        return y;
+    public int getZ() {
+        return z;
     }
 
     @Override
     public String toString(){
-        return "Coordinate{x=%d,y=%d}".formatted(x,y);
+        return "Coordinate{x=%d,z=%d}".formatted(x, z);
     }
 
     @Override
     public boolean equals(Object o) {
         if(o == this) return true;
         if (!(o instanceof Coordinate that)) return false;
-        return x == that.x && y == that.y;
+        return x == that.x && z == that.z;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(x, z);
     }
 }

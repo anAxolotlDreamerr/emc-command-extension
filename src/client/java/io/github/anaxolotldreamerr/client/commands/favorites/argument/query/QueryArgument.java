@@ -28,10 +28,25 @@ public interface QueryArgument extends Argument {
     Supplier<RequiredArgumentBuilder<FabricClientCommandSource,String>> DEFAULT_QUERY =()-> ClientCommandManager
                     .argument("favorite", StringArgumentType.word())
                     .suggests((context,suggestionsBuilder)->{
-                        String[] args = context.getInput().split(" ");
+                        String input = context.getInput();
+                        String[] args = input.split(" ");
+                        String start = args[args.length-1];
+                        Set<String> confirm = new HashSet<>();
                         TypeArgument<Identifier> type = ArgumentFactory.typeArgument(args[1]);
+                        if(!input.endsWith(" ")){
                         for(Favorite<Identifier> favorite : type.cache().favoritesSet()){
-                            suggestionsBuilder.suggest(favorite.name());
+                            if(favorite.name().startsWith(start)){
+                                confirm.add(favorite.name());
+                            }
+                        }
+                        }
+                        if(confirm.isEmpty()){
+                            for(Favorite<Identifier> favorite : type.cache().favoritesSet()){
+                                confirm.add(favorite.name());
+                            }
+                        }
+                        for(String favorite : confirm){
+                            suggestionsBuilder.suggest(favorite);
                         }
                         return suggestionsBuilder.buildFuture();
                     });
@@ -40,14 +55,29 @@ public interface QueryArgument extends Argument {
         RequiredArgumentBuilder<FabricClientCommandSource,String> required = ClientCommandManager
                 .argument("favorite", StringArgumentType.word())
                 .suggests(((context, builder) -> {
-                    String[] args = context.getInput().split(" ");
-                    for (String n : ArgumentFactory
+                    String input = context.getInput();
+                    String[] args = input.split(" ");
+                    String start = args[args.length-1];
+                    Set<String> confirm = new HashSet<>();
+                    Set<String> all = ArgumentFactory
                             .queryArgument(args[3])
                             .map(ArgumentFactory
                                     .typeArgument(args[1])
                                     .cache())
-                            .keySet())
-                        builder.suggest(n);
+                            .keySet();
+                    if(!input.endsWith(" ")) {
+                        for (String f : all) {
+                            if (f.startsWith(start)) {
+                                confirm.add(f);
+                            }
+                        }
+                    }
+                    if(confirm.isEmpty()){
+                        confirm.addAll(all);
+                    }
+                    for(String favorite : confirm){
+                        builder.suggest(favorite);
+                    }
                     return builder.buildFuture();
                 }))
                 .executes(command)

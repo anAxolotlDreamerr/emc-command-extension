@@ -25,4 +25,8 @@ public class NationType implements TypeArgument<NationIdentifier>{
     public Cache<NationIdentifier> cache() {
         return cache;
     }
+    @Override
+    public String toString() {
+        return NAME;
+    }
 }

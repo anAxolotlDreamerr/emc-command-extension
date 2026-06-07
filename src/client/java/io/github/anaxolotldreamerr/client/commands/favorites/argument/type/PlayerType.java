@@ -7,8 +7,8 @@ import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 
 public class PlayerType implements TypeArgument<PlayerIdentifier> {
     private final Cache<PlayerIdentifier> cache;
-    private static final String NAME = "-r";
-    private final static TownType TOWNTYPE = new TownType();
+    private static final String NAME = "-p";
+    private final static PlayerType PLAYERTYPE = new PlayerType();
     private final static String filePath = "favorites/player.json";
     public PlayerType(){
         this.cache = Cache.getInstance(filePath);
@@ -16,8 +16,8 @@ public class PlayerType implements TypeArgument<PlayerIdentifier> {
     public static String filePath(){
         return filePath;
     }
-    public static TownType getInstance(){
-        return TOWNTYPE;
+    public static PlayerType getInstance(){
+        return PLAYERTYPE;
     }
     public static String name(){
         return NAME;
@@ -25,5 +25,9 @@ public class PlayerType implements TypeArgument<PlayerIdentifier> {
     @Override
     public Cache<PlayerIdentifier> cache() {
         return cache;
+    }
+    @Override
+    public String toString() {
+        return NAME;
     }
 }

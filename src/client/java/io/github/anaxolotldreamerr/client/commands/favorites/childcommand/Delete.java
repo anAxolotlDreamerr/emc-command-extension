@@ -13,6 +13,7 @@ import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
 import io.github.anaxolotldreamerr.client.util.ArgumentUtil;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
+import io.github.anaxolotldreamerr.client.util.QueryUntil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
@@ -44,10 +45,10 @@ public class Delete implements ECommand {
     public String execute() {
         Favorite<Identifier> favorite;
         if(args.length<5) {
-            favorite = new NameQuery().map(type.cache()).get(args[3]);
+            favorite = QueryUntil.get(new NameQuery().map(type.cache()),args[3]);
             type.cache().removeFavorites(favorite);
         }else {
-            favorite =ArgumentFactory.queryArgument(args[3]).map(type.cache()).get(args[4]);
+            favorite =QueryUntil.get(ArgumentFactory.queryArgument(args[3]).map(type.cache()),args[4]);
             type.cache().removeFavorites(favorite);
         }
         return "Delete favorite:"+favorite.name()+" - "+favorite.id()+" successfully";

@@ -9,7 +9,7 @@ public class SearchUtil {
     public static Identifier search(Set<? extends Identifier> identifiers,String name){
         for(Identifier identifier : identifiers)
         {
-            if(identifier.name().equals(name)) return identifier;
+            if(identifier.name().equalsIgnoreCase(name)) return identifier;
         }
         throw new NullPointerException("No such name: "+name);
     }
