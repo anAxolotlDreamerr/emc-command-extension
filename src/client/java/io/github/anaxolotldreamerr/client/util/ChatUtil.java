@@ -15,7 +15,7 @@ public class ChatUtil {
     private static final Minecraft MC = Minecraft.getInstance();
     public static void send(Component component){
         if(component.getString().isEmpty()){ return; }
-        MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[EMC]").withStyle(component.getStyle()).append(component)));
+        MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[ECE]").withStyle(component.getStyle()).append(component)));
     }
     public static void sendException(Exception e){
         MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[ECE]"+e.getMessage()).withStyle(ChatFormatting.RED)));

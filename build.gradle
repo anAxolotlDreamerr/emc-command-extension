@@ -37,6 +37,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.17.2'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.2'
+	include(implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2"))
+	include(implementation("com.fasterxml.jackson.core:jackson-core:2.17.2"))
+	include(implementation("com.fasterxml.jackson.core:jackson-annotations:2.17.2"))
+
 }
 
 processResources {
@@ -86,4 +90,7 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+base {
+	archivesName = "EMC Command Extension"
 }
