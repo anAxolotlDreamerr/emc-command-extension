@@ -58,10 +58,8 @@ public class Delete implements ECommand {
     public void register(CommandNode<FabricClientCommandSource> node) {
         node.addChild(ClientCommandManager.literal("delete").build());
         CommandNode<FabricClientCommandSource> delete = node.getChild("delete");
+        delete.addChild(QueryArgument.QUERY.apply(COMMAND, ArgumentUtil.emptyRequiredArgumentBuilder()).build());
         delete.addChild(QueryArgument.DEFAULT_QUERY.get().executes(COMMAND).build());
-        for(LiteralArgumentBuilder<FabricClientCommandSource> builder : QueryArgument.QUERY.apply(COMMAND, ArgumentUtil.emptyRequiredArgumentBuilder()))
-            delete.addChild(builder.executes(COMMAND).build());
-
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
         new Delete().register(node);

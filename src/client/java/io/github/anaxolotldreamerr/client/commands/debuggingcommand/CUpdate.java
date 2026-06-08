@@ -39,7 +39,13 @@ public class CUpdate implements EMCCommand {
                         ChatUtil.sendException(e);
                     }
                     return 0;
-                        }))));
+                        }))).then(ClientCommandManager.literal("on").executes(context -> {
+                            Cache.isOutput(true);
+                            return 0;
+                })).then(ClientCommandManager.literal("off").executes(context -> {
+                    Cache.isOutput(false);
+                    return 0;
+                })));
         return this;
     }
     public static CUpdate getInstance(){

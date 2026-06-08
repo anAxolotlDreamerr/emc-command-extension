@@ -38,4 +38,10 @@ public final class TownIdentifier implements Identifier {
                 ", uuid='" + uuid + '\'' +
                 '}';
     }
+    public static TownIdentifier byIdentifier(Identifier identifier){
+        if(identifier instanceof TownIdentifier i){
+            return i;
+        }
+        throw new IllegalArgumentException(identifier+"isn't NationIdentifier");
+    }
 }

@@ -42,18 +42,48 @@ public interface SearchArgument<T extends Identifier> extends Argument {
             .suggests(((context, builder) -> {
                 String input = context.getInput();
                 String[] args = input.split(" ");
-                String type = args[1];
                 String start = args[args.length-1];
+                SearchArgument<Identifier> searchArgument = ArgumentFactory.defaultSearchArgument(args[1]);
                 Set<String> conform =new HashSet<>();
                 if(!input.endsWith(" ")) {
-                    for (Identifier identifier : ArgumentFactory.searchArgument(type).getAll()) {
+                    for (Identifier identifier : searchArgument.getAll()) {
                         if (identifier.name().toLowerCase().startsWith(start.toLowerCase())) {
                             conform.add(identifier.name());
                         }
                     }
                 }
                 if(conform.isEmpty()) {
-                    for (Identifier identifier : ArgumentFactory.searchArgument(type).getAll()) {
+                    for (Identifier identifier : searchArgument.getAll()) {
+                        builder.suggest(identifier.name());
+                    }
+                }else {
+                    for (String name : conform){
+                        builder.suggest(name);
+                    }
+                }
+                return builder.buildFuture();
+            }));
+    Supplier<RequiredArgumentBuilder<FabricClientCommandSource,String>> FROM_FAVORITE =()-> ClientCommandManager
+            .argument("object",StringArgumentType.word())
+            .suggests(((context, builder) -> {
+                String input = context.getInput();
+                String[] args = input.split(" ");
+                String start = args[args.length-1];
+                Set<Identifier> identifiers =ArgumentFactory
+                        .queryArgument(args[3])
+                        .map(ArgumentFactory.typeArgument(args[1]).cache())
+                        .get(context.getArgument("favorite",String.class))
+                        .objects();
+                Set<String> conform =new HashSet<>();
+                if(!input.endsWith(" ")) {
+                    for (Identifier identifier : identifiers) {
+                        if (identifier.name().toLowerCase().startsWith(start.toLowerCase())) {
+                            conform.add(identifier.name());
+                        }
+                    }
+                }
+                if(conform.isEmpty()) {
+                    for (Identifier identifier : identifiers) {
                         builder.suggest(identifier.name());
                     }
                 }else {
@@ -127,9 +157,6 @@ public interface SearchArgument<T extends Identifier> extends Argument {
                         return builder.buildFuture();
                     })).executes(command)
             );
-    Set<Identifier> lookup(T identifier, TypeArgument<? extends Identifier> type);
-    Set<Identifier> filter(Set<T> identifiers,TypeArgument<? extends Identifier> type);
-    Set<T> getAll();
     class SearchTypeArgument implements ArgumentType<String> {
         @Override
         public String parse(StringReader reader) throws CommandSyntaxException {
@@ -145,4 +172,7 @@ public interface SearchArgument<T extends Identifier> extends Argument {
             return new SearchTypeArgument();
         }
     }
+    Set<Identifier> lookup(T identifier, TypeArgument<? extends Identifier> type);
+    Set<Identifier> filter(Set<Identifier> identifiers,T identifier);
+    Set<T> getAll();
 }

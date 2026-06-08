@@ -48,14 +48,20 @@ public final class Favorite<T extends Identifier> {
         }
         return this;
     }
-    public Favorite<T> addAll(Set<T> objects, Cache<T> cache){
-        this.objects.addAll(objects);
+    public Set<T> addAll(Set<T> objects, Cache<T> cache){
+        Set<T> added = new HashSet<>();
+        for(T t : objects){
+            if(!this.objects.contains(t)){
+                this.objects.add(t);
+                added.add(t);
+            }
+        }
         try {
             cache.save();
         } catch (IOException e) {
             throw new IllegalArgumentException("Can't save the change");
         }
-        return this;
+        return added;
     }
     public Favorite<T> remove(T t,Cache<T> cache){
         objects.remove(t);
@@ -65,6 +71,21 @@ public final class Favorite<T extends Identifier> {
             throw new IllegalArgumentException("Can't save the change");
         }
         return this;
+    }
+    public Set<T> removeAll(Set<T> t,Cache<T> cache){
+        Set<T> removed = new HashSet<>();
+        for(T o : t){
+            if(objects.contains(o)){
+                objects.remove(o);
+                removed.add(o);
+            }
+        }
+        try {
+            cache.save();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can't save the change");
+        }
+        return removed;
     }
 
     @Override

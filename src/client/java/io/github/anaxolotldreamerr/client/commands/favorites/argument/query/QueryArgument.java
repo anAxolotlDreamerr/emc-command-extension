@@ -1,13 +1,17 @@
 package io.github.anaxolotldreamerr.client.commands.favorites.argument.query;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.Argument;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
+import io.github.anaxolotldreamerr.client.commands.favorites.argument.search.SearchArgument;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
@@ -50,9 +54,13 @@ public interface QueryArgument extends Argument {
                         }
                         return suggestionsBuilder.buildFuture();
                     });
-    BiFunction<Command<FabricClientCommandSource>,RequiredArgumentBuilder<FabricClientCommandSource,String>,Set<LiteralArgumentBuilder<FabricClientCommandSource>>> QUERY =(command,abuilder)-> {
-        Set<LiteralArgumentBuilder<FabricClientCommandSource>> literals = new HashSet<>();
-        RequiredArgumentBuilder<FabricClientCommandSource,String> required = ClientCommandManager
+    BiFunction<Command<FabricClientCommandSource>,RequiredArgumentBuilder<FabricClientCommandSource,String>,RequiredArgumentBuilder<FabricClientCommandSource,String>> QUERY =(command,abuilder)-> {
+       return ClientCommandManager.argument("query",QueryTypeArgument.queryTypeArgument()).suggests((context, builder) -> {
+            for(String query : ArgumentFactory.getAllQueryName()){
+                builder.suggest(query);
+            }
+            return builder.buildFuture();
+        }).then(ClientCommandManager
                 .argument("favorite", StringArgumentType.word())
                 .suggests(((context, builder) -> {
                     String input = context.getInput();
@@ -81,10 +89,22 @@ public interface QueryArgument extends Argument {
                     return builder.buildFuture();
                 }))
                 .executes(command)
-                .then(abuilder);
-        for(String arg : ArgumentFactory.getAllQueryName())
-            literals.add(ClientCommandManager.literal(arg).then(required));
-        return literals;
+                .then(abuilder));
     };
+    class QueryTypeArgument implements ArgumentType<String> {
+        @Override
+        public String parse(StringReader reader) throws CommandSyntaxException {
+            String value = reader.readUnquotedString();
+            if (!ArgumentFactory.getAllQueryName().contains(value)) {
+                throw CommandSyntaxException.BUILT_IN_EXCEPTIONS
+                        .literalIncorrect()
+                        .create(value);
+            }
+            return value;
+        }
+        public static ArgumentType<String> queryTypeArgument(){
+            return new QueryArgument.QueryTypeArgument();
+        }
+    }
     <T extends Identifier> Map<String, Favorite<T>> map(Cache<T> cache);
 }

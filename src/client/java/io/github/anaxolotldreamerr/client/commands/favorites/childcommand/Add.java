@@ -83,8 +83,8 @@ public class Add implements ECommand {
     @Override
     public String execute() {
         try {
-            favorite.addAll(objects,cache);
-            return "add "+objects.stream().map(Identifier::name).collect(Collectors.toSet())+" to "+favorite+" successfully!";
+            Set<Identifier> added = favorite.addAll(objects,cache);
+            return "add "+added.stream().map(Identifier::name).collect(Collectors.toSet())+" to "+favorite+" successfully!A total of "+added.size();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -94,14 +94,10 @@ public class Add implements ECommand {
     public void register(CommandNode<FabricClientCommandSource> node) {
         node.addChild(ClientCommandManager.literal("add").build());
         CommandNode<FabricClientCommandSource> add = node.getChild("add");
+        add.addChild(QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.SEARCH_WITH_QUERY.apply(COMMAND)).build());
+        add.addChild(QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.DEFAULT_SEARCH.get().executes(COMMAND)).build());
         add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.SEARCH_WITH_DEFAULT_QUERY.apply(COMMAND)).build());
         add.addChild(QueryArgument.DEFAULT_QUERY.get().then(SearchArgument.DEFAULT_SEARCH.get().executes(COMMAND)).build());
-        for(LiteralArgumentBuilder<FabricClientCommandSource> liter : QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.SEARCH_WITH_QUERY.apply(COMMAND)))
-            add.addChild(liter.build());
-        for(LiteralArgumentBuilder<FabricClientCommandSource> liter : QueryArgument.QUERY.apply(ArgumentUtil.emptyCommand(),SearchArgument.DEFAULT_SEARCH.get().executes(COMMAND)))
-            add.addChild(liter.build());
-
-
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
         new Add().register(node);

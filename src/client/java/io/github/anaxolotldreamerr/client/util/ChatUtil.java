@@ -8,8 +8,7 @@ import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.client.gui.Font;
 
 public class ChatUtil {
@@ -37,18 +36,18 @@ public class ChatUtil {
      */
     public static void showFavoriteList(Cache<Identifier> cache){
         if(cache.filePath().equals(TownType.filePath())){
-            showFavoriteList(cache,"message.emccommandextension.favorite.list.town");
+            showFavoriteList(cache,"message.emccommandextension.favorite.list.town",TownType.name());
         }else if(cache.filePath().equals(NationType.filePath())){
-            showFavoriteList(cache,"message.emccommandextension.favorite.list.nation");
+            showFavoriteList(cache,"message.emccommandextension.favorite.list.nation",NationType.name());
         }else if(cache.filePath().equals(PlayerType.filePath())){
-            showFavoriteList(cache,"message.emccommandextension.favorite.list.player");
+            showFavoriteList(cache,"message.emccommandextension.favorite.list.player",PlayerType.name());
         }
         else {
             throw new IllegalArgumentException("Unknown filePath:"+cache.filePath());
         }
 
     }
-    private static void showFavoriteList(Cache<Identifier> cache,String listKey){
+    private static void showFavoriteList(Cache<Identifier> cache,String listKey,String type){
         MutableComponent text;
             text = Component
                     .literal("=".repeat(35)+"\n")
@@ -70,15 +69,43 @@ public class ChatUtil {
                                             + " ".repeat(7)
                                             +"     [id]\n"
                             ).withStyle(ChatFormatting.LIGHT_PURPLE)
-                    )
-            ;
-            for(Favorite<Identifier> favorite : cache.favoritesSet()){
-                text.append(Component
-                        .literal(padRightPixels(MC.font
-                                ,favorite.name()
-                                ,17*4)+"|     "+favorite.id()+"\n")
-                        .withStyle(ChatFormatting.GREEN)
-                );
+                    );
+            if(cache.favoritesSet() == null|| cache.favoritesSet().isEmpty()){
+                text.append(Component.literal("(empty)"));
+            }
+            else {
+                for (Favorite<Identifier> favorite : cache.favoritesSet()) {
+                    if (type.equals(TownType.name())) {
+                        text.append(Component
+                                .literal(padRightPixels(MC.font
+                                        , favorite.name()
+                                        , 17 * 4) + "|     " + favorite.id() + "\n")
+                                .withStyle(Style.EMPTY.withColor(5635925)
+                                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("/favorites -t show "+favorite.name())))
+                                        .withClickEvent(new ClickEvent.RunCommand("/favorites -t show "+favorite.name())))
+                        );
+                    }
+                    if (type.equals(NationType.name())) {
+                        text.append(Component
+                                .literal(padRightPixels(MC.font
+                                        , favorite.name()
+                                        , 17 * 4) + "|     " + favorite.id() + "\n")
+                                .withStyle(Style.EMPTY.withColor(5635925)
+                                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("/favorites -n show "+favorite.name())))
+                                        .withClickEvent(new ClickEvent.RunCommand("/favorites -n show "+favorite.name())))
+                        );
+                    }
+                    if (type.equals(PlayerType.name())) {
+                        text.append(Component
+                                .literal(padRightPixels(MC.font
+                                        , favorite.name()
+                                        , 17 * 4) + "|     " + favorite.id() + "\n")
+                                .withStyle(Style.EMPTY.withColor(5635925)
+                                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("/favorites -p show "+favorite.name())))
+                                        .withClickEvent(new ClickEvent.RunCommand("/favorites -p show "+favorite.name())))
+                        );
+                    }
+                }
             }
             text.append(Component
                             .literal("-".repeat(35)+"\n")

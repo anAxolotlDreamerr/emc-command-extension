@@ -14,6 +14,7 @@ import io.github.anaxolotldreamerr.client.model.Player;
 import io.github.anaxolotldreamerr.client.model.Town;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
+import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -38,6 +39,7 @@ public class Cache<T extends Identifier> {
             Executors.newSingleThreadScheduledExecutor();
     private static boolean isStarting = false;
     private static Date updateDate;
+    private static boolean isOutput = false;
     public static Date updateDate(){
         return updateDate;
     }
@@ -46,11 +48,20 @@ public class Cache<T extends Identifier> {
             isStarting=true;
             SCHEDULER.scheduleAtFixedRate(()->{
                 update();
-                ChatUtil.send(Component.literal("All identifiers has been updated").withStyle(ChatFormatting.BLUE));
+                if(isOutput)
+                    ChatUtil.send(Component.literal("All identifiers has been updated").withStyle(ChatFormatting.BLUE));
                 updateObjects();
-                ChatUtil.send(Component.literal("All loaded objects has been updated").withStyle(ChatFormatting.BLUE));
+                if (isOutput)
+                    ChatUtil.send(Component.literal("All loaded objects has been updated").withStyle(ChatFormatting.BLUE));
             }, 0, 3, TimeUnit.MINUTES);
         }
+    }
+    public static void isOutput(boolean isOutput){
+        Cache.isOutput = isOutput;
+        if (isOutput)
+            ChatUtil.send(Component.literal("Update prompt has been opened"));
+        else
+            ChatUtil.send(Component.literal("Update prompt has been closed"));
     }
     public static void update(){
         try {
@@ -235,7 +246,7 @@ public class Cache<T extends Identifier> {
                 String id = node.get("id").asText();
                 Set<Identifier> identifiers = new HashSet<>();
                 for (JsonNode object : node.get("objects")) {
-                    identifiers.add(new ObjectMapper().enable(JsonParser.Feature.IGNORE_UNDEFINED).treeToValue(object, Identifier.class));
+                    identifiers.add(new ObjectMapper().treeToValue(object, Identifier.class));
                 }
                 favoriteSet.add(new Favorite<>(name, id, (Set<T>) identifiers));
             }

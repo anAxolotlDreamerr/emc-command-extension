@@ -38,4 +38,10 @@ public class PlayerIdentifier implements Identifier {
                 ", uuid='" + uuid + '\'' +
                 '}';
     }
+    public static PlayerIdentifier byIdentifier(Identifier identifier){
+        if(identifier instanceof PlayerIdentifier i){
+            return i;
+        }
+        throw new IllegalArgumentException(identifier+"isn't NationIdentifier");
+    }
 }

@@ -6,7 +6,10 @@ import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.Playe
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TownType;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
+import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
+import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
+import io.github.anaxolotldreamerr.client.model.Player;
 
 import java.util.Set;
 
@@ -27,8 +30,23 @@ public class PlayerSearch implements SearchArgument<PlayerIdentifier> {
     }
 
     @Override
-    public Set<Identifier> filter(Set<PlayerIdentifier> identifiers, TypeArgument<? extends Identifier> type) {
-        return Set.of();
+    public Set<Identifier> filter(Set<Identifier> identifiers, PlayerIdentifier identifier) {
+        if(!identifiers.isEmpty()) {
+            Identifier temp = identifiers.iterator().next();
+            if (temp instanceof TownIdentifier) {
+                Player player = Cache.getPlayer(identifier);
+                return Set.of(player.town());
+            }
+            if (temp instanceof NationIdentifier) {
+                Player player = Cache.getPlayer(identifier);
+                return Set.of(player.nation());
+            }
+            if(temp instanceof PlayerIdentifier){
+                return Set.of(identifier);
+            }
+            throw new NullPointerException("the search argument:"+NAME+" does not support the type");
+        }
+        throw new NullPointerException("the favorites is empty");
     }
 
     @Override

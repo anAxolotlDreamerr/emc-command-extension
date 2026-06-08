@@ -38,4 +38,10 @@ public class NationIdentifier implements Identifier {
                 ", uuid='" + uuid + '\'' +
                 '}';
     }
+    public static NationIdentifier byIdentifier(Identifier identifier){
+        if(identifier instanceof NationIdentifier i){
+            return i;
+        }
+        throw new IllegalArgumentException(identifier+"isn't NationIdentifier");
+    }
 }

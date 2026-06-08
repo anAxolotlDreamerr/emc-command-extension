@@ -38,8 +38,7 @@ public class ArgumentFactory {
             PlayerType.name(),new PlayerSearch()
     );
     private ArgumentFactory(){};
-    public static <T extends Identifier> TypeArgument<T> typeArgument(String arg){
-        if(TYPES.containsKey(arg)){
+    public static <T extends Identifier> TypeArgument<T> typeArgument(String arg){if(TYPES.containsKey(arg)){
             return (TypeArgument<T>) TYPES.get(arg);
         }
         throw new IllegalArgumentException("Unknown type arg:"+arg);

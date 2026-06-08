@@ -7,9 +7,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.commands.EMCCommand;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
-import io.github.anaxolotldreamerr.client.commands.favorites.childcommand.Add;
-import io.github.anaxolotldreamerr.client.commands.favorites.childcommand.Create;
-import io.github.anaxolotldreamerr.client.commands.favorites.childcommand.Delete;
+import io.github.anaxolotldreamerr.client.commands.favorites.childcommand.*;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -39,6 +37,8 @@ public class CFavorites implements EMCCommand {
         Create.load(commandNode.getChild("type"));
         Delete.load(commandNode.getChild("type"));
         Add.load(commandNode.getChild("type"));
+        Remove.load(commandNode.getChild("type"));
+        Show.load(commandNode.getChild("type"));
         return this;
     }
     public static CFavorites getInstance(){
