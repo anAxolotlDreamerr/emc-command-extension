@@ -26,3 +26,4 @@
     <search>:-t -n -p分别对应操作对象为town城镇,nation国家,player玩家的搜索参数(默认为<type>对应的随所参数-t->-t,-n->-n,-p->-p)
     [name]对应name名字,[id]对应id代号,[object]对应操作对象
     查看的收藏夹或对应类型的所有收藏夹均可用鼠标互动
+
