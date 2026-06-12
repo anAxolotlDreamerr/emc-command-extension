@@ -69,6 +69,8 @@ public class FavoritesUtil {
             }
         }
         CPage.getInstance().pages(page.generate());
-        MC.player.connection.sendCommand("page 1");
+        if (MC.player != null) {
+            MC.player.connection.sendCommand("page 1");
+        }
     }
 }

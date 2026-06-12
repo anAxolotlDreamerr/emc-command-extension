@@ -94,3 +94,4 @@ publishing {
 base {
 	archivesName = "EMC Command Extension"
 }
+

@@ -1,5 +1,5 @@
 {
-	"required": true,
+	"required": false,
 	"package": "io.github.anaxolotldreamerr.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
@@ -9,6 +9,6 @@
 		"defaultRequire": 1
 	},
 	"overwrites": {
-		"requireAnnotations": true
+		"requireAnnotations": false
 	}
 }
