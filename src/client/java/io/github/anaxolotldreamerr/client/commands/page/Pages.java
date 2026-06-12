@@ -45,7 +45,27 @@ public class Pages {
         if(page.existTitle()){
             component.append(Component.literal("-".repeat(35)+"\n").withStyle(ChatFormatting.WHITE));
         }
-        component.append(Component.literal(" ".repeat(16)+pages+"/"+PAGES.size()+"\n"));
+        if(1< pages && pages <PAGES.size()) {
+            component.append(Component.literal("<--")
+                    .withStyle(Style.EMPTY
+                            .withClickEvent(new ClickEvent.RunCommand("page "+(pages-1)))));
+            component.append(Component.literal(" ".repeat(5) + pages + "/" + PAGES.size()+" ".repeat(5)));
+            component.append(Component.literal("-->\n")
+                    .withStyle(Style.EMPTY
+                            .withClickEvent(new ClickEvent.RunCommand("page "+(pages+1)))));
+        }
+        if(pages==1 &&PAGES.size() != 1){
+            component.append(Component.literal(" ".repeat(8) + pages + "/" + PAGES.size()+" ".repeat(5)));
+            component.append(Component.literal("-->\n")
+                    .withStyle(Style.EMPTY
+                            .withClickEvent(new ClickEvent.RunCommand("page "+(pages+1)))));
+        }
+        if(pages == PAGES.size() && PAGES.size()!=1){
+            component.append(Component.literal("<--")
+                    .withStyle(Style.EMPTY
+                            .withClickEvent(new ClickEvent.RunCommand("page "+(pages-1)))));
+            component.append(Component.literal(" ".repeat(5) + pages + "/" + PAGES.size()+" ".repeat(8)+"\n"));
+        }
         component.append(Component.literal("=".repeat(35)+"\n").withStyle(ChatFormatting.YELLOW));
         CC.addMessage(component);
     }
