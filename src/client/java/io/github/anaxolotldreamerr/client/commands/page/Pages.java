@@ -138,6 +138,7 @@ public class Pages {
                 page.addLine(line);
                 count++;
             }
+            pages.add(page);
             return new Pages(pages);
         }
     }
