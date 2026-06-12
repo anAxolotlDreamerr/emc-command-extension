@@ -1,5 +1,6 @@
-1./favorites
-    主命令:/favorites空格后接<type>,可显示对应类型的所有收藏夹
+1./favorites \<type\>
+    
+    直接按enter即可显示对应类型的所有收藏夹
     <type>空格后接
 
     create [name] 自定义[name]名字来创建对应类型的收藏夹
@@ -26,4 +27,6 @@
     <search>:-t -n -p分别对应操作对象为town城镇,nation国家,player玩家的搜索参数(默认为<type>对应的随所参数-t->-t,-n->-n,-p->-p)
     [name]对应name名字,[id]对应id代号,[object]对应操作对象
     查看的收藏夹或对应类型的所有收藏夹均可用鼠标互动
+
+2./page \[pages\] 对于本mod任何可翻页显示均适用,\[pages\]即为对应的页数
 
