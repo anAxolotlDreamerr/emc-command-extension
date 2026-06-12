@@ -1,5 +1,7 @@
 package io.github.anaxolotldreamerr.client.util;
 
+import io.github.anaxolotldreamerr.client.commands.page.CPage;
+import io.github.anaxolotldreamerr.client.commands.page.Pages;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.identifier.NationIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
@@ -9,7 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.*;
 
-import java.util.Set;
+import java.util.*;
 
 
 public class FavoritesUtil {
@@ -26,27 +28,22 @@ public class FavoritesUtil {
         return max;
     }
     public static void show(Favorite<? extends Identifier> favorite){
-        MutableComponent text = Component.literal("")
-                .append(Component.literal("=".repeat(35) + "\n")
-                        .withStyle(ChatFormatting.YELLOW))
-                .append(Component.literal("Favorite\n")
-                        .withStyle(ChatFormatting.BLUE))
-                .append(Component.literal("-".repeat(35) + "\n")
-                        .withStyle(ChatFormatting.WHITE))
-                .append(Component.literal("Name: " + favorite.name() + "\n")
-                        .withStyle(ChatFormatting.GREEN))
-                .append(Component.literal("Objects:\n")
-                        .withStyle(ChatFormatting.YELLOW));
 
+        Component title = Component.literal("Favorite\n")
+                        .withStyle(ChatFormatting.BLUE);
         Set<? extends Identifier> objects = favorite.objects();
-
+        Pages.LimitedPage page = new Pages.LimitedPage(title,12);
+        page.addLine(Component.literal("Name: " + favorite.name() + "\n")
+                        .withStyle(ChatFormatting.GREEN)
+                .append(Component.literal("Objects:\n")
+                        .withStyle(ChatFormatting.YELLOW)));
         if (objects == null || objects.isEmpty()) {
-            text.append(Component.literal("  (empty)\n")
-                    .withStyle(ChatFormatting.GRAY));
+            CPage.getInstance().pages(new Pages(new Pages.Page(title).addLine(Component.literal("  (empty)\n")
+                    .withStyle(ChatFormatting.GRAY))));
         } else {
             for (Identifier obj : objects) {
                 if(obj instanceof TownIdentifier) {
-                    text.append(Component.literal(
+                    page.addLine(Component.literal(
                             "  - " + obj.name() + "\n"
                     ).withStyle(Style.EMPTY.withColor(16733695)
                             .withHoverEvent(new HoverEvent.ShowText(Component.literal("/t spawn "+obj.name())))
@@ -54,7 +51,7 @@ public class FavoritesUtil {
                     ));
                 }
                 if(obj instanceof NationIdentifier) {
-                    text.append(Component.literal(
+                    page.addLine(Component.literal(
                             "  - " + obj.name() + "\n"
                     ).withStyle(Style.EMPTY.withColor(16733695)
                             .withHoverEvent(new HoverEvent.ShowText(Component.literal("/n spawn "+obj.name())))
@@ -62,7 +59,7 @@ public class FavoritesUtil {
                     ));
                 }
                 if(obj instanceof PlayerIdentifier) {
-                    text.append(Component.literal(
+                    page.addLine(Component.literal(
                             "  - " + obj.name() + "\n"
                     ).withStyle(Style.EMPTY.withColor(16733695)
                             .withHoverEvent(new HoverEvent.ShowText(Component.literal("/res "+obj.name())))
@@ -71,12 +68,7 @@ public class FavoritesUtil {
                 }
             }
         }
-
-        text.append(Component.literal("-".repeat(35) + "\n")
-                        .withStyle(ChatFormatting.WHITE))
-                .append(Component.literal("=".repeat(35))
-                        .withStyle(ChatFormatting.YELLOW));
-
-        MC.execute(() -> MC.gui.getChat().addMessage(text));
+        CPage.getInstance().pages(page.generate());
+        MC.player.connection.sendCommand("page 1");
     }
 }

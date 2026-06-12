@@ -1,5 +1,5 @@
-主命令:/favorites空格后接<type>,可显示对应类型的所有收藏夹
-
+1./favorites
+    主命令:/favorites空格后接<type>,可显示对应类型的所有收藏夹
     <type>空格后接
 
     create [name] 自定义[name]名字来创建对应类型的收藏夹
