@@ -11,7 +11,6 @@ public class CNx implements EMCCommand {
     private CNx(){}
     @Override
     public EMCCommand register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        dispatcher.register(ClientCommandManager.literal("nx"));
         CommandNode<FabricClientCommandSource> nx = dispatcher.register(ClientCommandManager.literal("nx"));
         return this;
     }

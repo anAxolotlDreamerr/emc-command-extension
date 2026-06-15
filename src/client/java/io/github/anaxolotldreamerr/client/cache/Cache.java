@@ -71,7 +71,6 @@ public class Cache<T extends Identifier> {
             updateDate = new Date(System.currentTimeMillis());
         } catch (Exception e) {
             ChatUtil.sendException(e);
-            throw new RuntimeException(e);
         }
     }
 
@@ -115,7 +114,6 @@ public class Cache<T extends Identifier> {
             }
         } catch (IOException e) {
             ChatUtil.sendException(e);
-            throw new RuntimeException(e);
         }
     }
     public synchronized static Town getTown(TownIdentifier townIdentifier){

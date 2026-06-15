@@ -24,6 +24,7 @@ public class CommandRegistry {
                 (dispatcher, registryAccess) -> {
                     for(EMCCommand command : COMMANDS)command.register(dispatcher);
                 }
+
         );
     }
 }

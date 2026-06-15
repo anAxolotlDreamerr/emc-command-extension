@@ -5,7 +5,6 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
 import io.github.anaxolotldreamerr.client.commands.cx.CXArgument;
-import io.github.anaxolotldreamerr.client.commands.favorites.argument.search.PlayerSearch;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.PlayerType;
 import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
 import io.github.anaxolotldreamerr.client.model.Favorite;
@@ -16,9 +15,9 @@ import net.minecraft.client.Minecraft;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Hate implements ECommand {
-    private static Cache<PlayerIdentifier> cache = PlayerType.getInstance().cache();
-    private static final Command<FabricClientCommandSource> COMMAND = context -> {
+public class Unhate implements ECommand {
+    private Cache<PlayerIdentifier> cache = PlayerType.getInstance().cache();
+    private final Command<FabricClientCommandSource> COMMAND = context -> {
         if(!Cache.getInstance(PlayerType.filePath()).favoritesSet().stream().map(Favorite::id).collect(Collectors.toSet()).contains("hate")) {
             cache.addFavorites(new Favorite<>("hate", "hate", Set.of()));
         }
@@ -31,16 +30,16 @@ public class Hate implements ECommand {
         }
         if(search == null) {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.connection.sendCommand("favorites -p add -i hate " + object);
+                Minecraft.getInstance().player.connection.sendCommand("favorites -p remove -i hate " + object);
             }
         }else {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.connection.sendCommand("favorites -p add -i hate "+search+" "+object);
+                Minecraft.getInstance().player.connection.sendCommand("favorites -p remove -i hate "+search+" "+object);
             }
         }
         return 0;
     };
-    private Hate(){}
+    private Unhate(){}
     @Override
     public String execute() {
         return "";
@@ -48,12 +47,12 @@ public class Hate implements ECommand {
 
     @Override
     public void register(CommandNode<FabricClientCommandSource> node) {
-        node.addChild(ClientCommandManager.literal("hate").build());
-        CommandNode<FabricClientCommandSource> hate = node.getChild("hate");
-        hate.addChild(CXArgument.SEARCH.apply(COMMAND).build());
-        hate.addChild(CXArgument.DEFAULT.apply(PlayerSearch.getName()).executes(COMMAND).build());
+        node.addChild(ClientCommandManager.literal("unhate").build());
+        CommandNode<FabricClientCommandSource> remove = node.getChild("unhate");
+        remove.addChild(CXArgument.SEARCH.apply(COMMAND).build());
+        remove.addChild(CXArgument.FROM_FAVORITE.apply("hate").executes(COMMAND).build());
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
-        new Hate().register(node);
+        new Unhate().register(node);
     }
 }

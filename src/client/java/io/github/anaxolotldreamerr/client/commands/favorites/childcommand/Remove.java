@@ -22,6 +22,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
 favorites <type> remove <query> [favorite] <search> [object]
@@ -78,7 +79,7 @@ public class Remove implements ECommand {
     public String execute() {
         try {
             Set<Identifier> removed = favorite.removeAll(objects,cache);
-            return "remove "+removed.stream().map(Identifier::name)+" from "+favorite.name()+" successfully!A total of "+removed.size();
+            return "remove "+removed.stream().map(Identifier::name).collect(Collectors.toSet())+" from "+favorite.name()+" successfully!A total of "+removed.size();
         }catch (Exception e){
             throw new IllegalStateException(e);
         }

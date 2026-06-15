@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "emccommandextension",
 	"version": "${version}",
-	"name": "emccommandextension",
+	"name": "Emc Command Extension",
 	"description": "This mod extends EarthMC commands and allows you to use them anytime.",
 	"authors": [
 		"AxolotlDreamer"
@@ -19,7 +19,8 @@
 			"io.github.anaxolotldreamerr.EmcCommandExtension"
 		],
 		"client": [
-			"io.github.anaxolotldreamerr.client.EmcCommandExtensionClient"
+			"io.github.anaxolotldreamerr.client.EmcCommandExtensionClient",
+			"io.github.anaxolotldreamerr.client.render.RenderFilledBox"
 		]
 	},
 	"mixins": [
@@ -31,8 +32,8 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.19.2",
-		"minecraft": "~1.21.11",
-		"java": ">=21",
+		"minecraft": "~1.21.8",
+		"java": ">=16",
 		"fabric-api": "*"
 	}
 }
