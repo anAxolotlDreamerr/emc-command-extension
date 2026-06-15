@@ -8,9 +8,9 @@ public final class Coordinate {
 
     private final int x;
     private final int z;
-    public Coordinate(int x, int y){
+    public Coordinate(int x, int z){
         this.x =x;
-        this.z =y;
+        this.z =z;
     }
     public int getX() {
         return x;

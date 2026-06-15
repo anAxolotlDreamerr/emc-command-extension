@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "emccommandextension",
 	"version": "${version}",
-	"name": "emccommandextension",
+	"name": "Emc Command Extension",
 	"description": "This mod extends EarthMC commands and allows you to use them anytime.",
 	"authors": [
 		"AxolotlDreamer"
@@ -31,8 +31,9 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.19.2",
-		"minecraft": "~1.21.11",
+		"minecraft": "~1.21.8",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"malilib": ">=0.27.7"
 	}
 }

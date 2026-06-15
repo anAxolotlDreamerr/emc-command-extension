@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,NationIdentifier nation,String uuid,Set<PlayerIdentifier> residents,Integer balance) {
+public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,NationIdentifier nation,String uuid,Set<PlayerIdentifier> residents,Integer balance,Set<Chunk> chunks) {
     @JsonCreator
     public Town(@JsonProperty("name") String name
             , @JsonProperty("mayor") PlayerIdentifier mayor
@@ -28,7 +28,8 @@ public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,Nati
             , @JsonProperty("nation") NationIdentifier nation
             , @JsonProperty("uuid") String uuid
             , @JsonProperty("residents") Set<PlayerIdentifier> residents
-            , @JsonProperty("balance") Integer balance) {
+            , @JsonProperty("balance") Integer balance,
+                @JsonProperty("chunks") Set<Chunk> chunks) {
         this.name =name;
         this.mayor = mayor;
         this.coordinate = coordinate;
@@ -36,6 +37,7 @@ public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,Nati
         this.uuid =uuid;
         this.residents = residents == null ? Set.of() : Set.copyOf(residents);
         this.balance = balance;
+        this.chunks = chunks == null ? Set.of() : Set.copyOf(chunks);
     }
 
     private static Town create(JsonNode json){
@@ -46,6 +48,7 @@ public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,Nati
         String uuid;
         Set<PlayerIdentifier> residents = new HashSet<>();
         int balance;
+        Set<Chunk> chunks = new HashSet<>();
         name = json.get("name").asText();
         uuid = json.get("uuid").asText();
         {
@@ -67,7 +70,14 @@ public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,Nati
                 residents.add(new PlayerIdentifier(resident.get("name").asText(),resident.get("uuid").asText()));
             }
         }
-        return new Town(name,mayor,coordinate,nation,uuid,residents,balance);
+        {
+            JsonNode coordinates = json.get("coordinates");
+            JsonNode townBlocks = coordinates.get("townBlocks");
+            for(JsonNode node : townBlocks){
+                chunks.add(new Chunk(node.get(0).asInt(),node.get(1).asInt()));
+            }
+        }
+        return new Town(name,mayor,coordinate,nation,uuid,residents,balance,chunks);
     }
     public static Set<Town> byIdentifiers(Set<TownIdentifier> identifiers) throws IOException {
         String echo = EMCApiRequest.request(EMCApiRequest.townURI(), RequestUtil.mix(identifiers));
