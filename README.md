@@ -48,9 +48,16 @@
     unhate <search> [object] 根据<search>搜索参数对[object]对象查找相关的player玩家并将该玩家移出hate收藏夹
     unhate [object] 将[object]玩家对象移出hate收藏夹
 
+    favorites同/favorties命令,收藏夹类型为-p玩家
+
 4./tx 后接
 
     border show <search> [object] 根据<search>搜索参数对[object]对象查找相关的town城镇并将该城镇加入show_border收藏夹
     border show [object] 将[object]城镇对象添加进show_border收藏夹
     border hide <search> [object] 根据<search>搜索参数对[object]对象查找相关的town城镇并将该城镇移出show_border收藏夹
     border hide [object] 将[object]城镇对象移出show_border收藏夹
+
+    favorites同/favorties命令,收藏夹类型为-t城镇
+5./nx 后接
+
+    favorites同/favorties命令,收藏夹类型为-n国家
