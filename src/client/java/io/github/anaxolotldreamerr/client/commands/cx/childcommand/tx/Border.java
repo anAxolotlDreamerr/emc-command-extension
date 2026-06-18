@@ -67,6 +67,7 @@ public class Border implements ECommand {
         }
         return 0;
     };
+    private Border(){}
     @Override
     public String execute() {
         return "";
@@ -83,7 +84,7 @@ public class Border implements ECommand {
         show.addChild(CXArgument.SEARCH.apply(SHOW_BORDER).build());
         show.addChild(CXArgument.DEFAULT.apply(TownSearch.getName()).executes(SHOW_BORDER).build());
         hide.addChild(CXArgument.SEARCH.apply(HIDE_BORDER).build());
-        hide.addChild(CXArgument.FROM_FAVORITE.apply(FAVORITE_NAME).executes(HIDE_BORDER).build());
+        hide.addChild(CXArgument.FROM_FAVORITE.apply(TownType.name(),FAVORITE_NAME).executes(HIDE_BORDER).build());
     }
     public static void load(CommandNode<FabricClientCommandSource> node){new Border().register(node);}
 }

@@ -76,6 +76,7 @@ public record Nation(String name,PlayerIdentifier king,Coordinate coordinate,Tow
         return new Nation(name,king,coordinate,capital,uuid,towns,balance,residents);
     }
     public static Set<Nation> byIdentifiers(Set<NationIdentifier> identifiers) throws IOException {
+        if(identifiers.isEmpty())return Set.of();
         String echo = EMCApiRequest.request(EMCApiRequest.nationURI(), RequestUtil.mix(identifiers));
         JsonNode nodes = new ObjectMapper().readTree(echo);
         Set<Nation> nations = new HashSet<>();

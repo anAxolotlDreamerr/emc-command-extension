@@ -1,10 +1,19 @@
 package io.github.anaxolotldreamerr.client.model;
 
+import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
+import io.github.anaxolotldreamerr.client.mixin.LevelRendererAccessor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientChunkCache;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.SectionOcclusionGraph;
+import net.minecraft.client.renderer.ViewArea;
+import net.minecraft.client.renderer.chunk.SectionRenderDispatcher;
+import net.minecraft.core.SectionPos;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+
 /*
 ---------------->x
 |
@@ -75,6 +84,22 @@ public record Chunk(int x, int z) {
     }
     public Chunk west(){
         return new Chunk(x-1,z);
+    }
+
+    public static Set<Chunk> getChunksInRenderDistance() {
+        Minecraft mc = Minecraft.getInstance();
+        LevelRenderer renderer = mc.levelRenderer;
+        if(renderer == null){return Set.of();}
+        Set<Chunk> chunks = new HashSet<>();
+        ViewArea view = ((LevelRendererAccessor) renderer).getViewArea();
+        if(view == null) return Set.of();
+        for(SectionRenderDispatcher.RenderSection section : view.sections){
+            long pos = section.getSectionNode();
+            int x = SectionPos.x(pos);
+            int z = SectionPos.z(pos);
+            chunks.add(new Chunk(x,z));
+        }
+        return chunks;
     }
 
     @Override

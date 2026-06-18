@@ -80,6 +80,7 @@ public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,Nati
         return new Town(name,mayor,coordinate,nation,uuid,residents,balance,chunks);
     }
     public static Set<Town> byIdentifiers(Set<TownIdentifier> identifiers) throws IOException {
+        if(identifiers.isEmpty())return Set.of();
         String echo = EMCApiRequest.request(EMCApiRequest.townURI(), RequestUtil.mix(identifiers));
         JsonNode nodes = new ObjectMapper().readTree(echo);
         Set<Town> towns = new HashSet<>();

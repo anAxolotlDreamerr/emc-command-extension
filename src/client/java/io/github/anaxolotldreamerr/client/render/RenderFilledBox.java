@@ -39,9 +39,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 public class RenderFilledBox implements ClientModInitializer {
     private static RenderFilledBox instance;
     // :::custom-pipelines:define-pipeline
-    private static final RenderPipeline FILLED_THROUGH_WALLS = RenderPipelines.register(RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+    private static final RenderPipeline FILLED_WALLS = RenderPipelines.register(RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath(EmcCommandExtensionClient.MOD_ID, "pipeline/debug_filled_box_through_walls"))
-            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+            .withDepthTestFunction(DepthTestFunction.LESS_DEPTH_TEST)
             .build()
     );
     // :::custom-pipelines:define-pipeline
@@ -56,21 +56,18 @@ public class RenderFilledBox implements ClientModInitializer {
     private static final Matrix4f TEXTURE_MATRIX = new Matrix4f();
     private MappableRingBuffer vertexBuffer;
 
-    private Set<Line> linesByCamare = new HashSet<>();
+    private Set<Line> AxisAlignedWall = new HashSet<>();
 
-    public Set<Line> getLinesByCamare(){
-        return Set.copyOf(linesByCamare);
+    public Set<Line> getAxisAlignedWall(){
+        return Set.copyOf(AxisAlignedWall);
     }
     public Set<Line> addAll(Set<Line> lines){
-        linesByCamare.addAll(lines);
+        AxisAlignedWall.addAll(lines);
         return lines;
     }
     public Set<Line> removeAll(Set<Line> lines){
-        linesByCamare.removeAll(lines);
+        AxisAlignedWall.removeAll(lines);
         return lines;
-    }
-    public void clear(){
-        linesByCamare.clear();
     }
 
     // :::custom-pipelines:drawing-phase
@@ -85,9 +82,9 @@ public class RenderFilledBox implements ClientModInitializer {
     }
 
     private void extractAndDrawWaypoint(WorldRenderContext context) {
-        if(linesByCamare.isEmpty())return;
+        if(AxisAlignedWall.isEmpty())return;
         renderWaypoint(context);
-        drawFilledThroughWalls(Minecraft.getInstance(), FILLED_THROUGH_WALLS);
+        drawFilledThroughWalls(Minecraft.getInstance(), FILLED_WALLS);
     }
 
     // :::custom-pipelines:extraction-phase
@@ -97,10 +94,14 @@ public class RenderFilledBox implements ClientModInitializer {
         matrices.pushPose();
         matrices.translate(-camera.x, -camera.y, -camera.z);
         if (buffer == null) {
-            buffer = new BufferBuilder(allocator, FILLED_THROUGH_WALLS.getVertexFormatMode(), FILLED_THROUGH_WALLS.getVertexFormat());
+            buffer = new BufferBuilder(allocator, FILLED_WALLS.getVertexFormatMode(), FILLED_WALLS.getVertexFormat());
         }
-            for(Line line : linesByCamare)
-                renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y-1.5f, line.pos1().getZ(), line.pos2().getX()+0.05f, (float) camera.y-1.4f, line.pos2().getZ()+0.05f, 0f, 1f, 1f, 0.75f);
+            for(Line line : Set.copyOf(AxisAlignedWall)) {
+                renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos2().getX(), (float) camera.y + 200f, line.pos2().getZ(), 0f, 1f, 1f, 0.1f);
+                //renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos1().getX()+0.01f, (float) camera.y + 200f, line.pos1().getZ()+0.01f, 0f, 1f, 1f, 0.5f);
+                //renderFilledBox(matrices.last().pose(), buffer, line.pos2().getX(), (float) camera.y - 200f, line.pos2().getZ(), line.pos2().getX()+0.01f, (float) camera.y + 200f, line.pos2().getZ()+0.01f, 0f, 1f, 1f, 0.5f);
+
+            }
 
             matrices.popPose();
     }

@@ -64,6 +64,10 @@ public class TownSearch implements SearchArgument<TownIdentifier> {
     public Set<TownIdentifier> getAll(){
         return Cache.townIdentifiers();
     }
+    @Override
+    public String name() {
+        return NAME;
+    }
     public static String getName(){
         return NAME;
     }

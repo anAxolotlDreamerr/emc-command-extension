@@ -36,7 +36,7 @@ public class RenderLines {
 
                     RenderFilledBox render = RenderFilledBox.getInstance();
                     if (render == null) return;
-                    Set<Line> linesByCamera = render.getLinesByCamare();
+                    Set<Line> linesByCamera = render.getAxisAlignedWall();
                     lines.clear();
                     Map<String, Favorite<Identifier>> map =
                             ArgumentFactory.queryArgument("-i")
@@ -57,13 +57,18 @@ public class RenderLines {
                         chunks.addAll(town.chunks());
                     }
                     lines.addAll(Chunk.edgeOf(chunks));
+                    Set<Line> lineSet = new HashSet<>();
+                    for(Chunk chunk : Chunk.getChunksInRenderDistance()){
+                        lineSet.addAll(Chunk.edgeOf(Set.of(chunk)));
+                    }
+                    lines.retainAll(lineSet);
                     Set<Line> removing = linesByCamera.stream().filter(line -> !lines.contains(line)).collect(Collectors.toSet());
                     render.removeAll(removing);
                     render.addAll(lines);
                 }catch (Exception e){
                     ChatUtil.sendException(e);
                 }
-            }, 0, 500, TimeUnit.MILLISECONDS);
+            }, 0, 1, TimeUnit.MILLISECONDS);
         }
     }
 }

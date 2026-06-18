@@ -73,7 +73,7 @@ public class Create implements ECommand {
     @Override
     public String execute() {
         if(cache.addFavorites(favorite)) {
-            return "Successfully add favorites:" + favorite.name();
+            return "Successfully create favorite:" + favorite.name()+" -> "+favorite.id();
         }else {
             return "";
         }

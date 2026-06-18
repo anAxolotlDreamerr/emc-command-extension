@@ -55,6 +55,12 @@ public class NationSearch implements SearchArgument<NationIdentifier>{
     public Set<NationIdentifier> getAll() {
         return Cache.nationIdentifiers();
     }
+
+    @Override
+    public String name() {
+        return NAME;
+    }
+
     public static String getName(){
         return NAME;
     }

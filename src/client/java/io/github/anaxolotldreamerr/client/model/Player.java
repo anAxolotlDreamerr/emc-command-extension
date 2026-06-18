@@ -51,6 +51,7 @@ public record Player(String name
         return new Player(name,uuid,town,nation,balance,friends);
     }
     public static Set<Player> byIdentifiers(Set<PlayerIdentifier> identifiers) throws IOException {
+        if(identifiers.isEmpty())return Set.of();
         String echo = EMCApiRequest.request(EMCApiRequest.playerURI(), RequestUtil.mix(identifiers));
         JsonNode nodes = new ObjectMapper().readTree(echo);
         Set<Player> players = new HashSet<>();

@@ -53,6 +53,10 @@ public class PlayerSearch implements SearchArgument<PlayerIdentifier> {
     public Set<PlayerIdentifier> getAll() {
         return Cache.playerIdentifiers();
     }
+    @Override
+    public String name() {
+        return NAME;
+    }
     public static String getName(){
         return NAME;
     }

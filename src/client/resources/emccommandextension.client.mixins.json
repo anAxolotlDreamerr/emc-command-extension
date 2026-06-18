@@ -3,7 +3,8 @@
 	"package": "io.github.anaxolotldreamerr.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"GameRendererMixin"
+		"GameRendererMixin",
+		"LevelRendererAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

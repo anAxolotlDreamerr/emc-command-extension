@@ -5,10 +5,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.Argument;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TypeArgument;
@@ -16,10 +13,8 @@ import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -175,4 +170,5 @@ public interface SearchArgument<T extends Identifier> extends Argument {
     Set<Identifier> lookup(T identifier, TypeArgument<? extends Identifier> type);
     Set<Identifier> filter(Set<Identifier> identifiers,T identifier);
     Set<T> getAll();
+    String name();
 }

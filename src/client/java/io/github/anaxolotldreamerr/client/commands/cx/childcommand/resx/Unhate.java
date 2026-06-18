@@ -50,7 +50,7 @@ public class Unhate implements ECommand {
         node.addChild(ClientCommandManager.literal("unhate").build());
         CommandNode<FabricClientCommandSource> remove = node.getChild("unhate");
         remove.addChild(CXArgument.SEARCH.apply(COMMAND).build());
-        remove.addChild(CXArgument.FROM_FAVORITE.apply("hate").executes(COMMAND).build());
+        remove.addChild(CXArgument.FROM_FAVORITE.apply(PlayerType.name(),"hate").executes(COMMAND).build());
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
         new Unhate().register(node);
