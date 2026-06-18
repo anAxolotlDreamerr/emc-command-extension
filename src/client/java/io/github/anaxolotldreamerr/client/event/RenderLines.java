@@ -2,6 +2,7 @@ package io.github.anaxolotldreamerr.client.event;
 
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.cx.childcommand.tx.Border;
+import io.github.anaxolotldreamerr.client.commands.debuggingcommand.RenderDebugging;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
 import io.github.anaxolotldreamerr.client.identifier.Identifier;
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
@@ -61,6 +62,7 @@ public class RenderLines {
                     for(Chunk chunk : Chunk.getChunksInRenderDistance()){
                         lineSet.addAll(Chunk.edgeOf(Set.of(chunk)));
                     }
+                    RenderDebugging.getInstance().chunks(chunks);
                     lines.retainAll(lineSet);
                     Set<Line> removing = linesByCamera.stream().filter(line -> !lines.contains(line)).collect(Collectors.toSet());
                     render.removeAll(removing);

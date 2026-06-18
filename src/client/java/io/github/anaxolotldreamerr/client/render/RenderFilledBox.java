@@ -92,15 +92,12 @@ public class RenderFilledBox implements ClientModInitializer {
         PoseStack matrices = context.matrices();
         Vec3 camera = context.worldState().cameraRenderState.pos;
         matrices.pushPose();
-        matrices.translate(-camera.x, -camera.y, -camera.z);
+        matrices.translate(-camera.x+0.003f, -camera.y, -camera.z+0.001f);
         if (buffer == null) {
             buffer = new BufferBuilder(allocator, FILLED_WALLS.getVertexFormatMode(), FILLED_WALLS.getVertexFormat());
         }
             for(Line line : Set.copyOf(AxisAlignedWall)) {
-                renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos2().getX(), (float) camera.y + 200f, line.pos2().getZ(), 0f, 1f, 1f, 0.1f);
-                //renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos1().getX()+0.01f, (float) camera.y + 200f, line.pos1().getZ()+0.01f, 0f, 1f, 1f, 0.5f);
-                //renderFilledBox(matrices.last().pose(), buffer, line.pos2().getX(), (float) camera.y - 200f, line.pos2().getZ(), line.pos2().getX()+0.01f, (float) camera.y + 200f, line.pos2().getZ()+0.01f, 0f, 1f, 1f, 0.5f);
-
+                renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos2().getX(), (float) camera.y + 200f, line.pos2().getZ(), 0f, 1f, 1f, 0.35f);
             }
 
             matrices.popPose();
@@ -187,7 +184,6 @@ public class RenderFilledBox implements ClientModInitializer {
     private static void draw(Minecraft client, RenderPipeline pipeline, MeshData builtBuffer, MeshData.DrawState drawParameters, GpuBuffer vertices, VertexFormat format) {
         GpuBuffer indices;
         VertexFormat.IndexType indexType;
-
         if (pipeline.getVertexFormatMode() == VertexFormat.Mode.QUADS) {
             // Sort the quads if there is translucency
             builtBuffer.sortQuads(allocator, RenderSystem.getProjectionType().vertexSorting());

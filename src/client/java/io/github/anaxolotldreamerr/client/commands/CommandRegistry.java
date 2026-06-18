@@ -5,6 +5,7 @@ import io.github.anaxolotldreamerr.client.commands.cx.CNx;
 import io.github.anaxolotldreamerr.client.commands.cx.CResx;
 import io.github.anaxolotldreamerr.client.commands.cx.CTx;
 import io.github.anaxolotldreamerr.client.commands.debuggingcommand.CUpdate;
+import io.github.anaxolotldreamerr.client.commands.debuggingcommand.RenderDebugging;
 import io.github.anaxolotldreamerr.client.commands.favorites.CFavorites;
 import io.github.anaxolotldreamerr.client.commands.page.CPage;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -18,6 +19,7 @@ public class CommandRegistry {
             , CNx.getInstance()
             , CResx.getInstance()
             , CTx.getInstance()
+            , RenderDebugging.getInstance()
     );
     public static void register(){
         ClientCommandRegistrationCallback.EVENT.register(

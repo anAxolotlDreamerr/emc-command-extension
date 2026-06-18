@@ -1,9 +1,10 @@
 package io.github.anaxolotldreamerr.client.model;
 
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
-import io.github.anaxolotldreamerr.client.mixin.LevelRendererAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientChunkCache;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SectionOcclusionGraph;
@@ -88,16 +89,32 @@ public record Chunk(int x, int z) {
 
     public static Set<Chunk> getChunksInRenderDistance() {
         Minecraft mc = Minecraft.getInstance();
-        LevelRenderer renderer = mc.levelRenderer;
-        if(renderer == null){return Set.of();}
+        ClientLevel level = mc.level;
+        LocalPlayer player = mc.player;
+
+        if (level == null || player == null) return Set.of();
+
+        int renderDist = mc.options.getEffectiveRenderDistance();
+
+        // 当前玩家所在 chunk
+        int playerChunkX = player.chunkPosition().x;
+        int playerChunkZ = player.chunkPosition().z;
+
         Set<Chunk> chunks = new HashSet<>();
-        ViewArea view = ((LevelRendererAccessor) renderer).getViewArea();
-        if(view == null) return Set.of();
-        for(SectionRenderDispatcher.RenderSection section : view.sections){
-            long pos = section.getSectionNode();
-            int x = SectionPos.x(pos);
-            int z = SectionPos.z(pos);
-            chunks.add(new Chunk(x,z));
+
+        int r = renderDist;
+
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+
+                // ⭐ 圆形裁剪（关键）
+                if (dx * dx + dz * dz > r * r) continue;
+
+                int cx = playerChunkX + dx;
+                int cz = playerChunkZ + dz;
+
+                chunks.add(new Chunk(cx, cz));
+            }
         }
         return chunks;
     }

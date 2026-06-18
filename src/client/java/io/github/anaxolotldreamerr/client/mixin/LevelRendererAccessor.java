@@ -1,4 +1,4 @@
-package io.github.anaxolotldreamerr.client.mixin;
+/*package io.github.anaxolotldreamerr.client.mixin;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.ViewArea;
@@ -9,4 +9,4 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface LevelRendererAccessor {
     @Accessor("viewArea")
     ViewArea getViewArea();
-}
+}*/
