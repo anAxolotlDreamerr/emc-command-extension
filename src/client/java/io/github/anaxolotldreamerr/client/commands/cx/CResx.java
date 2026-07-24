@@ -41,6 +41,7 @@ public class CResx implements EMCCommand {
         new Favorites(PlayerType.name()).register(resx);
         Hate.load(resx);
         Unhate.load(resx);
+        new io.github.anaxolotldreamerr.client.commands.cx.childcommand.resx.Toggle().register(resx);
         return this;
     }
     public static CResx getInstance(){

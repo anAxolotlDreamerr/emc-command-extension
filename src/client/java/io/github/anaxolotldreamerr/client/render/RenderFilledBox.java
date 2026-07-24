@@ -8,8 +8,11 @@ import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.anaxolotldreamerr.client.EmcCommandExtensionClient;
+import io.github.anaxolotldreamerr.client.config.Config;
+import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.event.RenderLines;
 import io.github.anaxolotldreamerr.client.model.Line;
+import io.github.anaxolotldreamerr.client.util.ColorUtil;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MappableRingBuffer;
@@ -26,6 +29,7 @@ import java.util.HashSet;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -56,7 +60,7 @@ public class RenderFilledBox implements ClientModInitializer {
     private static final Matrix4f TEXTURE_MATRIX = new Matrix4f();
     private MappableRingBuffer vertexBuffer;
 
-    private Set<Line> AxisAlignedWall = new HashSet<>();
+    private Set<Line> AxisAlignedWall = ConcurrentHashMap.newKeySet();
 
     public Set<Line> getAxisAlignedWall(){
         return Set.copyOf(AxisAlignedWall);
@@ -96,8 +100,11 @@ public class RenderFilledBox implements ClientModInitializer {
         if (buffer == null) {
             buffer = new BufferBuilder(allocator, FILLED_WALLS.getVertexFormatMode(), FILLED_WALLS.getVertexFormat());
         }
-            for(Line line : Set.copyOf(AxisAlignedWall)) {
-                renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos2().getX(), (float) camera.y + 200f, line.pos2().getZ(), 0f, 1f, 1f, 0.35f);
+            for(Line line : AxisAlignedWall) {
+                long color = ConfigManager.getLong(Config.BORDER_COLOR);
+                float opacity  = ConfigManager.getInteger(Config.BORDER_OPACITY)/255.0f;
+                int[] c = ColorUtil.hexToArgb(color);
+                renderFilledBox(matrices.last().pose(), buffer, line.pos1().getX(), (float) camera.y - 200f, line.pos1().getZ(), line.pos2().getX(), (float) camera.y + 200f, line.pos2().getZ(),c[1]/255.0f,c[2]/255.0f,c[3]/255.0f,opacity);
             }
 
             matrices.popPose();

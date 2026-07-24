@@ -17,6 +17,8 @@ import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -27,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Cache<T extends Identifier> {
+    private static final Logger log = LoggerFactory.getLogger(Cache.class);
     private Set<Favorite<T>> favoriteSet;
     private final String filePath;
     private static Set<TownIdentifier> townIdentifiers;
@@ -113,7 +116,7 @@ public class Cache<T extends Identifier> {
                         ));
             }
         } catch (IOException e) {
-            ChatUtil.sendException(e);
+            log.info(e.getMessage());
         }
     }
     public synchronized static Town getTown(TownIdentifier townIdentifier){

@@ -17,14 +17,14 @@ public class HatredNameColor {
     public static void register(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             try {
-                HatredNameColor.update();
+                //HatredNameColor.update();
             }catch (Exception e){
                 ChatUtil.sendException(e);
             }
         });
     }
     public static void update() {
-        HatredManager.refresh();
+
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
 

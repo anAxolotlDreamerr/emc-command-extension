@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static io.github.anaxolotldreamerr.client.EmcCommandExtensionClient.LOGGER;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Player(String name
@@ -55,7 +56,11 @@ public record Player(String name
         String echo = EMCApiRequest.request(EMCApiRequest.playerURI(), RequestUtil.mix(identifiers));
         JsonNode nodes = new ObjectMapper().readTree(echo);
         Set<Player> players = new HashSet<>();
-        for(JsonNode node : nodes)players.add(create(node));
+        try {
+            for(JsonNode node : nodes)players.add(create(node));
+        }catch (NullPointerException e){
+            LOGGER.info(e.getMessage());
+        }
         return players;
     }
     public PlayerIdentifier identifier(){

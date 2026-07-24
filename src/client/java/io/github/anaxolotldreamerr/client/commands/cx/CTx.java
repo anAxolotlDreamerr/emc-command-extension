@@ -5,6 +5,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.commands.EMCCommand;
 import io.github.anaxolotldreamerr.client.commands.cx.childcommand.Favorites;
 import io.github.anaxolotldreamerr.client.commands.cx.childcommand.tx.Border;
+import io.github.anaxolotldreamerr.client.commands.cx.childcommand.tx.Toggle;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.TownType;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -19,6 +20,7 @@ public class CTx implements EMCCommand {
 
         new Favorites(TownType.name()).register(tx);
         Border.load(tx);
+        new Toggle().register(tx);
         return this;
     }
     public static CTx getInstance(){

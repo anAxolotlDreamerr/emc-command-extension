@@ -13,7 +13,9 @@ import io.github.anaxolotldreamerr.client.identifier.PlayerIdentifier;
 import io.github.anaxolotldreamerr.client.identifier.TownIdentifier;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import io.github.anaxolotldreamerr.client.util.RequestUtil;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static io.github.anaxolotldreamerr.client.EmcCommandExtensionClient.LOGGER;
 import java.io.IOException;
 
 import java.util.*;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,NationIdentifier nation,String uuid,Set<PlayerIdentifier> residents,Integer balance,Set<Chunk> chunks) {
+    private static final Logger log = LoggerFactory.getLogger(Town.class);
+
     @JsonCreator
     public Town(@JsonProperty("name") String name
             , @JsonProperty("mayor") PlayerIdentifier mayor
@@ -84,7 +88,11 @@ public record Town(String name,PlayerIdentifier mayor,Coordinate coordinate,Nati
         String echo = EMCApiRequest.request(EMCApiRequest.townURI(), RequestUtil.mix(identifiers));
         JsonNode nodes = new ObjectMapper().readTree(echo);
         Set<Town> towns = new HashSet<>();
-        for(JsonNode node : nodes)towns.add(create(node));
+        try {
+            for (JsonNode node : nodes) towns.add(create(node));
+        }catch (NullPointerException e){
+            LOGGER.info(e.getMessage());
+        }
         return towns;
     }
     public TownIdentifier identifier(){

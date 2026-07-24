@@ -1,5 +1,6 @@
 package io.github.anaxolotldreamerr.client.util;
 
+import io.github.anaxolotldreamerr.client.EmcCommandExtensionClient;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.NationType;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.type.PlayerType;
@@ -19,6 +20,7 @@ public class ChatUtil {
         MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[ECE]").withStyle(component.getStyle()).append(component)));
     }
     public static void sendException(Exception e){
+        EmcCommandExtensionClient.LOGGER.error(e.getMessage());
         MC.execute(()-> MC.gui.getChat().addMessage(Component.literal("[ECE]"+e.getMessage()).withStyle(ChatFormatting.RED)));
     }
     public static void sendWarning(String warning){

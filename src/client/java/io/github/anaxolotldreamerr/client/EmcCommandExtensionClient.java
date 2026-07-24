@@ -2,6 +2,7 @@ package io.github.anaxolotldreamerr.client;
 
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.CommandRegistry;
+import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.event.EventRegistry;
 import io.github.anaxolotldreamerr.client.event.RenderLines;
 import io.github.anaxolotldreamerr.client.model.Chunk;
@@ -21,6 +22,7 @@ public class EmcCommandExtensionClient implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	@Override
 	public void onInitializeClient() {
+		ConfigManager.load();
 		CommandRegistry.register();
 		EMCApiRequest.configure();
 		Cache.start();

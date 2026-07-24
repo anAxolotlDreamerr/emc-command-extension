@@ -12,6 +12,7 @@ import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import io.github.anaxolotldreamerr.client.util.RequestUtil;
 
 import java.io.IOException;
+import static io.github.anaxolotldreamerr.client.EmcCommandExtensionClient.LOGGER;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -80,7 +81,11 @@ public record Nation(String name,PlayerIdentifier king,Coordinate coordinate,Tow
         String echo = EMCApiRequest.request(EMCApiRequest.nationURI(), RequestUtil.mix(identifiers));
         JsonNode nodes = new ObjectMapper().readTree(echo);
         Set<Nation> nations = new HashSet<>();
-        for(JsonNode node : nodes)nations.add(create(node));
+        try {
+            for(JsonNode node : nodes)nations.add(create(node));
+        }catch (NullPointerException e){
+            LOGGER.info(e.getMessage());
+        }
         return nations;
     }
     public NationIdentifier identifier(){
