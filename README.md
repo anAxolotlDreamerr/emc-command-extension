@@ -40,7 +40,7 @@
 
 2./page \[pages\] 对于本mod任何可翻页显示均适用,\[pages\]即为对应的页数
 
-3./rex 后接
+3./resx 后接
 
     hate <search> [object] 根据<search>搜索参数对[object]对象查找相关的player玩家并将该玩家加入hate收藏夹
     hate [object] 将[object]玩家对象添加进hate收藏夹
