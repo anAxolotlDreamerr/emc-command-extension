@@ -1,0 +1,107 @@
+{
+  "TownURI" : "https://api.earthmc.net/v4/towns",
+  "NationURI" : "https://api.earthmc.net/v4/nations",
+  "PlayerURI" : "https://api.earthmc.net/v4/players",
+
+  "BorderColor":"5A00FFFF",
+  "BorderOpacity": 90,
+
+  "HatredPlayerNameColor": "FF8B0000",
+
+  "Colors": {
+    "transparent": "00000000",
+    "black": "FF000000",
+    "white": "FFFFFFFF",
+    "gray": "FF808080",
+    "dark_gray": "FF404040",
+    "light_gray": "FFC0C0C0",
+
+    "red": "FFFF0000",
+    "dark_red": "FF8B0000",
+    "light_red": "FFFF6666",
+    "pink": "FFFFC0CB",
+    "hot_pink": "FFFF69B4",
+
+    "orange": "FFFFA500",
+    "dark_orange": "FFFF8C00",
+    "gold": "FFFFD700",
+    "yellow": "FFFFFF00",
+    "light_yellow": "FFFFFF99",
+
+    "green": "FF00FF00",
+    "dark_green": "FF006400",
+    "forest_green": "FF228B22",
+    "lime": "FF32CD32",
+    "olive": "FF808000",
+
+    "cyan": "FF00FFFF",
+    "light_cyan": "FFE0FFFF",
+    "teal": "FF008080",
+    "turquoise": "FF40E0D0",
+
+    "blue": "FF0000FF",
+    "dark_blue": "FF00008B",
+    "navy": "FF000080",
+    "sky_blue": "FF87CEEB",
+    "light_blue": "FFADD8E6",
+
+    "purple": "FF800080",
+    "dark_purple": "FF301934",
+    "violet": "FFEE82EE",
+    "magenta": "FFFF00FF",
+
+    "brown": "FFA52A2A",
+    "dark_brown": "FF654321",
+    "chocolate": "FFD2691E",
+    "tan": "FFD2B48C",
+
+    "beige": "FFF5F5DC",
+    "ivory": "FFFFFFF0",
+    "cream": "FFFFFDD0",
+
+    "silver": "FFC0C0C0",
+    "copper": "FFB87333",
+    "bronze": "FFCD7F32",
+
+    "emerald": "FF50C878",
+    "ruby": "FFE0115F",
+    "sapphire": "FF0F52BA",
+    "amethyst": "FF9966CC",
+
+    "grass": "FF7CFC00",
+    "leaf": "FF228B22",
+    "ocean": "FF006994",
+    "water": "FF1E90FF",
+    "fire": "FFFF4500",
+
+    "lava": "FFFF3300",
+    "ice": "FF99FFFF",
+    "snow": "FFFFFAFA",
+
+    "night": "FF191970",
+    "midnight": "FF0F0F23",
+    "space": "FF101010",
+
+    "mint": "FF98FF98",
+    "rose": "FFFF007F",
+    "coral": "FFFF7F50",
+
+    "discord": "FF5865F2",
+    "minecraft_green": "FF55FF55",
+    "minecraft_red": "FFFF5555",
+    "minecraft_gold": "FFFFAA00",
+    "minecraft_aqua": "FF55FFFF",
+    "minecraft_blue": "FF5555FF",
+    "minecraft_purple": "FFFF55FF",
+
+    "success": "FF55FF55",
+    "warning": "FFFFAA00",
+    "error": "FFFF5555",
+    "info": "FF55FFFF",
+    "highlight": "FFFFFF55",
+    "disabled": "FF777777",
+    "selected": "FF00AAFF",
+    "border": "FFFFFFFF",
+    "background": "AA000000"
+  }
+}
