@@ -35,7 +35,9 @@
 
     show <query> [favorite] 自定义<query>来查看对应类型的[favorite]收藏夹
     show [favorite] 使用默认<query>来查看对应类型的[favorite]收藏夹
-
+    
+    clear <query> [favorite] 自定义<query>来清理对应类型的[favorite]收藏夹
+    clear [favorite] 使用默认<query>来查看对应类型的[favorite]收藏夹
     
 
 2./page \[pages\] 对于本mod任何可翻页显示均适用,\[pages\]即为对应的页数
@@ -50,6 +52,8 @@
 
     favorites同/favorties命令,收藏夹类型为-p玩家
 
+    set <option> [value] 同/options set命令,<option>为与Player玩家相关扩展命令的配置项
+
 4./tx 后接
 
     border show <search> [object] 根据<search>搜索参数对[object]对象查找相关的town城镇并将该城镇加入show_border收藏夹
@@ -58,6 +62,17 @@
     border hide [object] 将[object]城镇对象移出show_border收藏夹
 
     favorites同/favorties命令,收藏夹类型为-t城镇
+
+    set <option> [value] 同/options set命令,<option>为与Town城镇相关扩展命令的配置项
+
 5./nx 后接
 
     favorites同/favorties命令,收藏夹类型为-n国家
+
+    set <option> [value] 同/options set命令,<option>为与Nation国家相关扩展命令的配置项
+
+6./options 后接
+    
+    reset <option> 重置指定的<option>配置项,特殊:all可重置所有option配置项
+    reload 从config.json加载所有option配置项,且会重置非法的option配置项
+    set <option> [value] 为<option>配置项设置[value]值

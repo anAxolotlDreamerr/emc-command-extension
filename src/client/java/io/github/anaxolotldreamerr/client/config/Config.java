@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 3. Config 添加 getter/setter
  * 4. Config.copy() 添加字段复制
  * 5. 重新生成 equals/hashCode/toString
- * 6. ConfigManager.FEATURES 添加字段名
+ * 6. ConfigManager.OPTIONS 添加字段名
  * 7. ConfigManager 添加 getter/setter 映射
  * 8. ConfigManager.SUGGESTIONS 添加补全提示（可选）
  * 9. 对应 command toggle 添加字段
