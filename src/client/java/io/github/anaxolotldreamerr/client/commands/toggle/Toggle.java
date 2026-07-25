@@ -1,6 +1,5 @@
 package io.github.anaxolotldreamerr.client.commands.toggle;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -12,8 +11,11 @@ import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Toggle implements EMCCommand {
@@ -34,8 +36,10 @@ public class Toggle implements EMCCommand {
                                 String feature = context.getArgument("feature",String.class);
                                 if ("all".equals(feature)) {
                                     ConfigManager.reset();
+                                    ChatUtil.send(Component.literal("reset all features successfully!").withStyle(ChatFormatting.GREEN));
                                 } else {
                                     ConfigManager.reset(feature);
+                                    ChatUtil.send(Component.literal("reset "+feature+" successfully!Now it is "+ConfigManager.get(feature)).withStyle(ChatFormatting.GREEN));
                                 }
                             }catch (Exception e){
                                 ChatUtil.sendException(e);
@@ -43,10 +47,40 @@ public class Toggle implements EMCCommand {
                             return 0;
                         })
         ).build());
+
         togglex.addChild(ClientCommandManager.literal("reload").executes(context -> {
-            ConfigManager.load();
+            try {
+                ConfigManager.load();
+                ChatUtil.send(Component.literal("reload config successfully!").withStyle(ChatFormatting.GREEN));
+            } catch (IOException e) {
+                ChatUtil.sendException(e);
+            }
             return 0;
         }).build());
+
+        togglex.addChild(ClientCommandManager.literal("toggle").then(
+                ClientCommandManager.argument("feature",StringArgumentType.word())
+                        .suggests((context, builder) -> {
+                            SharedSuggestionProvider.suggest(ConfigManager.features(),builder);
+                            return builder.buildFuture();
+                        }).then(ClientCommandManager.argument("value",StringArgumentType.word())
+                                .suggests((context, builder) -> {
+                                    SharedSuggestionProvider.suggest(ConfigManager.getSuggestions(context.getArgument("feature",String.class)),builder);
+                                    return builder.buildFuture();
+                                }).executes(context -> {
+                                    try {
+                                        String feature = context.getArgument("feature",String.class);
+                                        String value = context.getArgument("value",String.class);
+                                        ConfigManager.set(feature,value);
+                                        ChatUtil.send(Component.literal("toggle "+feature+" successfully!Now it is "+ConfigManager.get(feature)).withStyle(ChatFormatting.GREEN));
+                                    }catch (NullPointerException e){
+                                        ChatUtil.sendException(new NullPointerException("no such feature:"+context.getArgument("feature",String.class)));
+                                    }catch (Exception e){
+                                        ChatUtil.sendException(e);
+                                    }
+                                    return 0;
+                                }))
+        ).build());
         return this;
     }
 
@@ -67,15 +101,8 @@ public class Toggle implements EMCCommand {
                                             return suggestionsBuilder.buildFuture();
                                         }).executes(commandContext -> {
                                             try {
-                                                if(ConfigManager.hasInteger(commandContext.getArgument("feature",String.class)))
-                                                    ConfigManager.setInteger(commandContext.getArgument("feature",String.class),
-                                                            commandContext.getArgument("value",String.class));
-                                                if(ConfigManager.hasLong(commandContext.getArgument("feature",String.class)))
-                                                    ConfigManager.setLong(commandContext.getArgument("feature",String.class),
-                                                            commandContext.getArgument("value",String.class));
-                                                if(ConfigManager.hasString(commandContext.getArgument("feature",String.class)))
-                                                    ConfigManager.setString(commandContext.getArgument("feature",String.class),
-                                                            commandContext.getArgument("value",String.class));
+                                                ConfigManager.set(commandContext.getArgument("feature",String.class),commandContext.getArgument("value",String.class));
+                                                ChatUtil.send(Component.literal("toggle "+commandContext.getArgument("feature",String.class)+" successfully!Now it is "+ConfigManager.get(commandContext.getArgument("feature",String.class))).withStyle(ChatFormatting.GREEN));
                                             }catch (Exception e){
                                                 ChatUtil.sendException(e);
                                             }

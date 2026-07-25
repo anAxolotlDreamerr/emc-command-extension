@@ -1,20 +1,18 @@
 package io.github.anaxolotldreamerr.client.event;
 
 
-import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
-import io.github.anaxolotldreamerr.client.identifier.Identifier;
+import io.github.anaxolotldreamerr.client.config.Config;
+import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.util.HatredManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class HatredPlayerWarningHandler {
     private static final Map<String,Integer> IN_RANGE = new HashMap<>();
@@ -42,7 +40,9 @@ public class HatredPlayerWarningHandler {
                 for(Map.Entry<String,Integer> entry:IN_RANGE.entrySet()){
                     component.append(" "+entry.getKey()+"("+entry.getValue()+"m)");
                 }
-                client.player.displayClientMessage(component.append("!!!").withStyle(ChatFormatting.DARK_RED),true);
+                client.player.displayClientMessage(component.append("!!!").withStyle(style -> style.withColor(
+                        TextColor.fromRgb((int)(ConfigManager.getLong(Config.HATRED_PLAYER_NAME_COLOR)%0x01000000L))
+                )),true);
             }
         });
     }

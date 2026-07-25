@@ -2,10 +2,13 @@ package io.github.anaxolotldreamerr.client.commands.cx.childcommand;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
 import io.github.anaxolotldreamerr.client.commands.cx.CXArgument;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
+import io.github.anaxolotldreamerr.client.commands.favorites.argument.query.QueryArgument;
 import io.github.anaxolotldreamerr.client.util.ArgumentUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -116,6 +119,30 @@ public class Favorites implements ECommand {
         }
         return 0;
     };
+
+    private final Command<FabricClientCommandSource> CLEAR = context -> {
+        String query = "";
+        String favorite = "";
+        String search = "";
+        String object = "";
+        try {
+            query =" "+context.getArgument("query",String.class);
+        }catch (Exception e){}
+        try {
+            favorite =" "+context.getArgument("favorite",String.class);
+        }catch (Exception e){}
+        try {
+            search =" "+context.getArgument("search",String.class);
+        }catch (Exception e){}
+        try {
+            object =" "+context.getArgument("object",String.class);
+        }catch (Exception e){}
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.connection.sendCommand("favorites "+type+" clear"+query+favorite+search+object);
+        }
+        return 0;
+    };
+
     public Favorites(String type){
         this.type = type;
     }
@@ -139,11 +166,13 @@ public class Favorites implements ECommand {
         favorites.addChild(ClientCommandManager.literal("remove").build());
         favorites.addChild(ClientCommandManager.literal("add").build());
         favorites.addChild(ClientCommandManager.literal("show").build());
+        favorites.addChild(ClientCommandManager.literal("clear").build());
         CommandNode<FabricClientCommandSource> create = favorites.getChild("create");
         CommandNode<FabricClientCommandSource> delete = favorites.getChild("delete");
         CommandNode<FabricClientCommandSource> remove = favorites.getChild("remove");
         CommandNode<FabricClientCommandSource> add =favorites.getChild("add");
         CommandNode<FabricClientCommandSource> show = favorites.getChild("show");
+        CommandNode<FabricClientCommandSource> clear = favorites.getChild("clear");
 
         create.addChild(ClientCommandManager.argument("name",StringArgumentType.word())
                 .executes(CREATE)
@@ -170,5 +199,13 @@ public class Favorites implements ECommand {
 
         show.addChild(CXArgument.QUERY.apply(type,SHOW,ArgumentUtil.emptyRequiredArgumentBuilder()).build());
         show.addChild(CXArgument.DEFAULT_QUERY.apply(type).executes(SHOW).build());
+
+        clear.addChild(CXArgument.QUERY.apply(type,CLEAR,ArgumentUtil.emptyRequiredArgumentBuilder()).build());
+        clear.addChild(CXArgument.DEFAULT_QUERY.apply(type).executes(CLEAR).build());
+    }
+
+    @Override
+    public int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        return 0;
     }
 }

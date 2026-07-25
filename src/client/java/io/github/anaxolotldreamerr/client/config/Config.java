@@ -9,14 +9,27 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/*
+ * 新增配置字段流程:
+ *
+ * 1. default_config.json 添加字段及默认值
+ * 2. Config 添加字段变量
+ * 3. Config 添加 getter/setter
+ * 4. Config.copy() 添加字段复制
+ * 5. 重新生成 equals/hashCode/toString
+ * 6. ConfigManager.FEATURES 添加字段名
+ * 7. ConfigManager 添加 getter/setter 映射
+ * 8. ConfigManager.SUGGESTIONS 添加补全提示（可选）
+ * 9. 对应 command toggle 添加字段
+ */
 public class Config {
-    public static final String TOWN_URI = "townURI";
-    public static final String NATION_URI = "nationURI";
-    public static final String PLAYER_URI = "playerURI";
-    public static final String BORDER_COLOR = "borderColor";
-    public static final String BORDER_OPACITY = "borderOpacity";
-    public static final String Hatred_Player_Name_Color = "hatredPlayerNameColor";
-    public static final String COLORS = "colors";
+    public static final String TOWN_URI = "TownURI";
+    public static final String NATION_URI = "NationURI";
+    public static final String PLAYER_URI = "PlayerURI";
+    public static final String BORDER_COLOR = "BorderColor";
+    public static final String BORDER_OPACITY = "BorderOpacity";
+    public static final String HATRED_PLAYER_NAME_COLOR = "HatredPlayerNameColor";
+    public static final String COLORS = "Colors";
 
     private static final String REGEX = "^[0-9a-fA-F]{8}$";
     private String townURI;
@@ -38,40 +51,41 @@ public class Config {
         c.setBorderColor(config.borderColor);
         c.setBorderOpacity(config.borderOpacity);
         c.setColors(config.colors());
+        c.setHatredPlayerNameColor(config.hatredPlayerNameColor);
         return c;
     }
 
-    @JsonGetter("townURI")
+    @JsonGetter(TOWN_URI)
     public String townURI() {
         return townURI;
     }
 
-    @JsonSetter("townURI")
+    @JsonSetter(TOWN_URI)
     public String setTownURI(String townURI) {
       return  this.townURI = townURI;
     }
 
-    @JsonGetter("nationURI")
+    @JsonGetter(NATION_URI)
     public String nationURI() {
         return nationURI;
     }
 
-    @JsonSetter("nationURI")
+    @JsonSetter(NATION_URI)
     public String setNationURI(String nationURI) {
       return   this.nationURI = nationURI;
     }
 
-    @JsonGetter("playerURI")
+    @JsonGetter(PLAYER_URI)
     public String playerURI() {
         return playerURI;
     }
 
-    @JsonSetter("playerURI")
+    @JsonSetter(PLAYER_URI)
     public String setPlayerURI(String playerURI) {
       return   this.playerURI = playerURI;
     }
 
-    @JsonGetter("BorderColor")
+    @JsonGetter(BORDER_COLOR)
     public String borderColor() {
         String value = Long.toHexString(borderColor);
         return "0".repeat(8-value.length())+value;
@@ -81,7 +95,7 @@ public class Config {
         return borderColor;
     }
 
-    @JsonSetter("BorderColor")
+    @JsonSetter(BORDER_COLOR)
     public Long setBorderColor(String borderColor) {
         if(!borderColor.matches(REGEX) && !colors.containsKey(borderColor)) throw new IllegalArgumentException("Invalid borderColor hex value:"+borderColor);
         if(colors != null) {
@@ -95,7 +109,7 @@ public class Config {
         throw new IllegalArgumentException(Long.toHexString(borderColor)+" is out of the range:[0,0xFFFFFFFF]");
     }
 
-    @JsonGetter("HatredPlayerNameColor")
+    @JsonGetter(HATRED_PLAYER_NAME_COLOR)
     public String hatredPlayerNameColor() {
        String value = Long.toHexString(hatredPlayerNameColor);
         return "0".repeat(8-value.length())+value;
@@ -104,7 +118,7 @@ public class Config {
         return hatredPlayerNameColor;
     }
 
-    @JsonSetter("HatredPlayerNameColor")
+    @JsonSetter(HATRED_PLAYER_NAME_COLOR)
     public Long setHatredPlayerNameColor(String hatredPlayerNameColor) {
         if(!hatredPlayerNameColor.matches(REGEX) && !colors.containsKey(hatredPlayerNameColor)) throw new IllegalArgumentException("Invalid hatredPlayerNameColor hex value:"+hatredPlayerNameColor);
         if(colors != null) {
@@ -118,7 +132,7 @@ public class Config {
         throw new IllegalArgumentException(Long.toHexString(hatredPlayerNameColor)+" is out of the range:[0,0xFFFFFFFF]");
     }
 
-    @JsonGetter("colors")
+    @JsonGetter(COLORS)
     public Map<String,String> colors(){
         return colors == null ? Map.of() : colors.keySet().stream().collect(Collectors.toMap(Function.identity(),key -> {
             String value = Long.toHexString(colors.get(key));
@@ -131,7 +145,7 @@ public class Config {
         return Map.copyOf(colors);
     }
 
-    @JsonSetter("colors")
+    @JsonSetter(COLORS)
     public void setColors(Map<String,String> colors){
         this.colors = new HashMap<>();
         for(String key : colors.keySet()){
@@ -142,37 +156,14 @@ public class Config {
         }
     }
 
-    @JsonGetter("BorderOpacity")
+    @JsonGetter(BORDER_OPACITY)
     public int borderOpacity(){
         return borderOpacity;
     }
-    @JsonSetter("BorderOpacity")
+    @JsonSetter(BORDER_OPACITY)
     public int setBorderOpacity(int borderOpacity){
         if(borderOpacity<=255 && borderOpacity>=0) return this.borderOpacity = borderOpacity;
         throw new IllegalArgumentException(borderOpacity+" is out of the range [0,255]");
-    }
-
-    public void normalize(Config template){
-        if(townURI == null){
-            townURI = template.townURI;
-        }
-        if(nationURI == null){
-            nationURI = template.nationURI;
-        }
-        if(playerURI == null){
-            playerURI = template.playerURI;
-        }
-        if(borderColor==null){
-            borderColor = template.longBorderColor();
-        }
-
-       if(hatredPlayerNameColor==null){
-           hatredPlayerNameColor = Long.valueOf(template.hatredPlayerNameColor(),16);
-       }
-
-       if(colors==null){
-        colors =Map.copyOf(template.colors);
-       }
     }
 
     @Override

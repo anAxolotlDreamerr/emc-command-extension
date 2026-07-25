@@ -37,7 +37,7 @@ public final class Favorite<T extends Identifier> {
     }
     @JsonGetter("objects")
     public Set<T> objects(){
-        return objects;
+        return Set.copyOf(objects);
     }
     public Favorite<T> add(T t,Cache<T> cache){
         objects.add(t);

@@ -1,5 +1,6 @@
 package io.github.anaxolotldreamerr.client.commands;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
@@ -9,7 +10,14 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
  * 2.You need to call the load method of that class in the register method of the CFavorites class
  * 3.This class must be a non-instantiable class
  */
-public interface ECommand {
+public interface ECommand extends Command<FabricClientCommandSource> {
+    /**
+     *new
+     */
+    default int run(){
+        return 0;
+    }
+    @Deprecated
     String execute();
     void register(CommandNode<FabricClientCommandSource>node);
 }

@@ -1,6 +1,8 @@
 package io.github.anaxolotldreamerr.client.commands.cx.childcommand.resx;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
@@ -55,5 +57,10 @@ public class Hate implements ECommand {
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
         new Hate().register(node);
+    }
+
+    @Override
+    public int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        return 0;
     }
 }

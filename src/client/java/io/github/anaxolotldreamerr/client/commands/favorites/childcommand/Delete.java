@@ -3,6 +3,8 @@ package io.github.anaxolotldreamerr.client.commands.favorites.childcommand;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
 import io.github.anaxolotldreamerr.client.commands.favorites.argument.ArgumentFactory;
@@ -63,5 +65,10 @@ public class Delete implements ECommand {
     }
     public static void load(CommandNode<FabricClientCommandSource> node){
         new Delete().register(node);
+    }
+
+    @Override
+    public int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        return 0;
     }
 }

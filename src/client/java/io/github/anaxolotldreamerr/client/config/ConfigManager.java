@@ -26,7 +26,7 @@ public class ConfigManager {
     );
     private static final Map<String,Function<Config,Long>> GET_LONG = Map.of(
             Config.BORDER_COLOR,Config::longBorderColor
-            ,Config.Hatred_Player_Name_Color,Config::longHatredPlayerNameColor
+            ,Config.HATRED_PLAYER_NAME_COLOR,Config::longHatredPlayerNameColor
     );
     private static final Map<String,Function<Config,Integer>> GET_INT = Map.of(
             Config.BORDER_OPACITY,Config::borderOpacity
@@ -38,17 +38,17 @@ public class ConfigManager {
     );
     private static final Map<String,BiFunction<Config,String,Long>> SET_LONG = Map.of(
             Config.BORDER_COLOR,Config::setBorderColor
-            ,Config.Hatred_Player_Name_Color,Config::setHatredPlayerNameColor
+            ,Config.HATRED_PLAYER_NAME_COLOR,Config::setHatredPlayerNameColor
     );
     private static final Map<String,BiFunction<Config,Integer,Integer>> SET_INT = Map.of(
             Config.BORDER_OPACITY,Config::setBorderOpacity
     );
     private static final Map<String, Function<Config,Set<String>>> SUGGESTIONS = Map.of(
             Config.BORDER_COLOR,config-> config.colors().keySet()
-            ,Config.Hatred_Player_Name_Color,config->config.colors().keySet()
+            ,Config.HATRED_PLAYER_NAME_COLOR, config->config.colors().keySet()
     );
     private static final Set<String> FEATURES = Set.of(
-            Config.Hatred_Player_Name_Color,
+            Config.HATRED_PLAYER_NAME_COLOR,
             Config.BORDER_OPACITY,
             Config.PLAYER_URI,
             Config.NATION_URI,
@@ -110,34 +110,38 @@ public class ConfigManager {
         if(GET_STRING.containsKey(feature)) return GET_STRING.get(feature).apply(config);
         throw new NullPointerException("No such feature:"+feature);
     }
+
     public static Long getLong(String feature) {
         if(GET_LONG.containsKey(feature)) return GET_LONG.get(feature).apply(config);
         throw new NullPointerException("No such feature:"+feature);
     }
+
     public static Integer getInteger(String feature){
         if(GET_INT.containsKey(feature)) return GET_INT.get(feature).apply(config);
         throw new NullPointerException("No such feature:"+feature);
     }
+
     public static Config getConfig(){
         return Config.copyOf(config);
     }
 
-    public static void setString(String feature,String value){
+    public static void setString(String feature,String value) throws IOException {
         if(!SET_STRING.containsKey(feature)){
             throw new NullPointerException("No such feature:"+feature);
         }
         SET_STRING.get(feature).apply(config,value);
         save();
     }
-    public static void setLong(String feature,String value){
+
+    public static void setLong(String feature,String value) throws IOException {
         if(!SET_LONG.containsKey(feature)){
             throw new NullPointerException("No such feature:"+feature);
         }
         SET_LONG.get(feature).apply(config,value);
         save();
-
     }
-    public static void setInteger(String feature,String value){
+
+    public static void setInteger(String feature,String value) throws IOException {
         Integer v = Integer.parseInt(value);
         if(!SET_INT.containsKey(feature)){
             throw new NullPointerException("No such feature:"+feature);
@@ -145,14 +149,11 @@ public class ConfigManager {
         SET_INT.get(feature).apply(config,v);
         save();
     }
-    public static void save(){
-        try {
-            normalize();
+
+    public static void save() throws IOException {
             ConfigManager.getInstance().write("config.json",config);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
+
     public static void reset(){
         try {
             config  = Config.copyOf(DEFAULT_CONFIG);
@@ -161,6 +162,7 @@ public class ConfigManager {
             throw new RuntimeException(e);
         }
     }
+
     private static String readResource(String value){
         String config = null;
         try(InputStream stream = Config.class.getClassLoader()
@@ -176,31 +178,33 @@ public class ConfigManager {
         return config;
     }
 
-    public static void load(){
+    public static void load() throws IOException {
         ConfigManager manager = ConfigManager.getInstance();
         if(DEFAULT_CONFIG == null){
             String json = readResource("default_config.json");
-            try {
-                DEFAULT_CONFIG = manager.mapper.readValue(json, Config.class);
-            } catch (Exception e) {
-            }
-            if (!manager.exists("config.json")) {
+            DEFAULT_CONFIG = manager.mapper.readValue(json, Config.class);
+        }
+        JsonNode jsonNode;
+        jsonNode = getInstance().read("config.json");
+        config = Config.copyOf(DEFAULT_CONFIG);
+        boolean needRepair = false;
+        for(String feature : features()) {
+            if(jsonNode.hasNonNull(feature)) {
                 try {
-                    manager.write("config.json", json);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    set(feature,jsonNode.get(feature).asText());
+                }catch (Exception e){
+                    needRepair = true;
                 }
+            }else {
+                needRepair = true;
             }
         }
-        try {
-            config =manager.mapper.treeToValue(manager.read("config.json"),Config.class);
-            normalize();
-        } catch (Exception e) {
-            reset();
+        if(needRepair){
+            save();
         }
     }
 
-    public static void reset(String feature){
+    public static void reset(String feature) throws IOException {
         if(hasString(feature)){
             setString(feature,GET_STRING.get(feature).apply(DEFAULT_CONFIG));
             return;
@@ -224,9 +228,11 @@ public class ConfigManager {
     public static boolean hasInteger(String feature){
         return GET_INT.containsKey(feature);
     }
+
     public static boolean hasLong(String feature){
         return GET_LONG.containsKey(feature);
     }
+
     public static boolean hasString(String feature){
         return GET_STRING.containsKey(feature);
     }
@@ -235,7 +241,35 @@ public class ConfigManager {
         return Set.copyOf(FEATURES);
     }
 
-    private static void normalize(){
-        config.normalize(DEFAULT_CONFIG);
+    public static void set(String feature,String value) throws IllegalArgumentException, NullPointerException, IOException {
+        if(hasInteger(feature)){
+            SET_INT.get(feature).apply(config,Integer.parseInt(value));
+            save();
+            return;
+        }
+        if(hasLong(feature)){
+            SET_LONG.get(feature).apply(config,value);
+            save();
+            return;
+        }
+        if(hasString(feature)){
+            SET_STRING.get(feature).apply(config,value);
+            save();
+            return;
+        }
+        throw new NullPointerException("No such feature:"+feature);
+    }
+
+    public static String get(String feature) throws IllegalArgumentException,NullPointerException{
+        if(hasInteger(feature)){
+           return GET_INT.get(feature).apply(config).toString();
+        }
+        if(hasLong(feature)){
+            return Long.toHexString(GET_LONG.get(feature).apply(config));
+        }
+        if(hasString(feature)){
+            return GET_STRING.get(feature).apply(config);
+        }
+        throw new NullPointerException("No such feature:"+feature);
     }
 }

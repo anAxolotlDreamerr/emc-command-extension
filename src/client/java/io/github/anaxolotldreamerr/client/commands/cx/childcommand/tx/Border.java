@@ -1,6 +1,8 @@
 package io.github.anaxolotldreamerr.client.commands.cx.childcommand.tx;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.anaxolotldreamerr.client.cache.Cache;
 import io.github.anaxolotldreamerr.client.commands.ECommand;
@@ -87,4 +89,9 @@ public class Border implements ECommand {
         hide.addChild(CXArgument.FROM_FAVORITE.apply(TownType.name(),FAVORITE_NAME).executes(HIDE_BORDER).build());
     }
     public static void load(CommandNode<FabricClientCommandSource> node){new Border().register(node);}
+
+    @Override
+    public int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        return 0;
+    }
 }

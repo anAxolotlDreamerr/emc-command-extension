@@ -1,6 +1,5 @@
 package io.github.anaxolotldreamerr.client.cache;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
@@ -14,7 +13,6 @@ import io.github.anaxolotldreamerr.client.model.Player;
 import io.github.anaxolotldreamerr.client.model.Town;
 import io.github.anaxolotldreamerr.client.network.EMCApiRequest;
 import io.github.anaxolotldreamerr.client.util.ChatUtil;
-import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
@@ -235,12 +233,11 @@ public class Cache<T extends Identifier> {
     public static <U extends Identifier> Cache<U> getInstance(String filePath){
         return new Cache<>(filePath);
     }
-    @SuppressWarnings("unchecked")
     public void load()  {
         favoriteSet = new HashSet<>();
         ConfigManager manager = new ConfigManager();
         try {
-            if (!manager.exists(filePath)) manager.write(filePath, null);
+            if (!manager.exists(filePath)) manager.write(filePath, "");
             JsonNode nodes = manager.read(filePath);
             for(JsonNode node : nodes) {
                 String name = node.get("name").asText();

@@ -3,7 +3,6 @@ package io.github.anaxolotldreamerr.client.mixin;
 import io.github.anaxolotldreamerr.client.config.Config;
 import io.github.anaxolotldreamerr.client.config.ConfigManager;
 import io.github.anaxolotldreamerr.client.util.HatredManager;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -36,7 +35,7 @@ public class EntityRendererMixin {
                 cir.setReturnValue(
                         Component.literal(original.getString())
                                 .withStyle(style -> style.withColor(
-                                        TextColor.fromRgb((int)(ConfigManager.getLong(Config.Hatred_Player_Name_Color)%0x01000000L))
+                                        TextColor.fromRgb((int)(ConfigManager.getLong(Config.HATRED_PLAYER_NAME_COLOR)%0x01000000L))
                                 ))
                 );
             }

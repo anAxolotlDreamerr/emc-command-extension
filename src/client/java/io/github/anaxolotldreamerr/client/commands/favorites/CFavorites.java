@@ -39,6 +39,7 @@ public class CFavorites implements EMCCommand {
         Add.load(commandNode.getChild("type"));
         Remove.load(commandNode.getChild("type"));
         Show.load(commandNode.getChild("type"));
+        new Clear().register(commandNode.getChild("type"));
         return this;
     }
     public static CFavorites getInstance(){
