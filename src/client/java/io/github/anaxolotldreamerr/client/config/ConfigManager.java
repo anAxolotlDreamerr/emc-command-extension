@@ -47,7 +47,7 @@ public class ConfigManager {
             Config.BORDER_COLOR,config-> config.colors().keySet()
             ,Config.HATRED_PLAYER_NAME_COLOR, config->config.colors().keySet()
     );
-    private static final Set<String> FEATURES = Set.of(
+    private static final Set<String> OPTIONS = Set.of(
             Config.HATRED_PLAYER_NAME_COLOR,
             Config.BORDER_OPACITY,
             Config.PLAYER_URI,
@@ -101,52 +101,52 @@ public class ConfigManager {
         Files.writeString(file, string);
     }
 
-    public static Set<String> getSuggestions(String feature){
-        if(SUGGESTIONS.containsKey(feature)) return SUGGESTIONS.get(feature).apply(config);
+    public static Set<String> getSuggestions(String option){
+        if(SUGGESTIONS.containsKey(option)) return SUGGESTIONS.get(option).apply(config);
         return Set.of();
     }
 
-    public static String getString(String feature) {
-        if(GET_STRING.containsKey(feature)) return GET_STRING.get(feature).apply(config);
-        throw new NullPointerException("No such feature:"+feature);
+    public static String getString(String option) {
+        if(GET_STRING.containsKey(option)) return GET_STRING.get(option).apply(config);
+        throw new NullPointerException("No such option:"+option);
     }
 
-    public static Long getLong(String feature) {
-        if(GET_LONG.containsKey(feature)) return GET_LONG.get(feature).apply(config);
-        throw new NullPointerException("No such feature:"+feature);
+    public static Long getLong(String option) {
+        if(GET_LONG.containsKey(option)) return GET_LONG.get(option).apply(config);
+        throw new NullPointerException("No such option:"+option);
     }
 
-    public static Integer getInteger(String feature){
-        if(GET_INT.containsKey(feature)) return GET_INT.get(feature).apply(config);
-        throw new NullPointerException("No such feature:"+feature);
+    public static Integer getInteger(String option){
+        if(GET_INT.containsKey(option)) return GET_INT.get(option).apply(config);
+        throw new NullPointerException("No such option:"+option);
     }
 
     public static Config getConfig(){
         return Config.copyOf(config);
     }
 
-    public static void setString(String feature,String value) throws IOException {
-        if(!SET_STRING.containsKey(feature)){
-            throw new NullPointerException("No such feature:"+feature);
+    public static void setString(String option,String value) throws IOException {
+        if(!SET_STRING.containsKey(option)){
+            throw new NullPointerException("No such option:"+option);
         }
-        SET_STRING.get(feature).apply(config,value);
+        SET_STRING.get(option).apply(config,value);
         save();
     }
 
-    public static void setLong(String feature,String value) throws IOException {
-        if(!SET_LONG.containsKey(feature)){
-            throw new NullPointerException("No such feature:"+feature);
+    public static void setLong(String option,String value) throws IOException {
+        if(!SET_LONG.containsKey(option)){
+            throw new NullPointerException("No such option:"+option);
         }
-        SET_LONG.get(feature).apply(config,value);
+        SET_LONG.get(option).apply(config,value);
         save();
     }
 
-    public static void setInteger(String feature,String value) throws IOException {
+    public static void setInteger(String option,String value) throws IOException {
         Integer v = Integer.parseInt(value);
-        if(!SET_INT.containsKey(feature)){
-            throw new NullPointerException("No such feature:"+feature);
+        if(!SET_INT.containsKey(option)){
+            throw new NullPointerException("No such option:"+option);
         }
-        SET_INT.get(feature).apply(config,v);
+        SET_INT.get(option).apply(config,v);
         save();
     }
 
@@ -188,10 +188,10 @@ public class ConfigManager {
         jsonNode = getInstance().read("config.json");
         config = Config.copyOf(DEFAULT_CONFIG);
         boolean needRepair = false;
-        for(String feature : features()) {
-            if(jsonNode.hasNonNull(feature)) {
+        for(String option : options()) {
+            if(jsonNode.hasNonNull(option)) {
                 try {
-                    set(feature,jsonNode.get(feature).asText());
+                    set(option,jsonNode.get(option).asText());
                 }catch (Exception e){
                     needRepair = true;
                 }
@@ -204,72 +204,72 @@ public class ConfigManager {
         }
     }
 
-    public static void reset(String feature) throws IOException {
-        if(hasString(feature)){
-            setString(feature,GET_STRING.get(feature).apply(DEFAULT_CONFIG));
+    public static void reset(String option) throws IOException {
+        if(hasString(option)){
+            setString(option,GET_STRING.get(option).apply(DEFAULT_CONFIG));
             return;
         }
-        if(hasLong(feature)){
-            setLong(feature,Long.toHexString(GET_LONG.get(feature).apply(DEFAULT_CONFIG)));
+        if(hasLong(option)){
+            setLong(option,Long.toHexString(GET_LONG.get(option).apply(DEFAULT_CONFIG)));
             return;
         }
-        if(hasInteger(feature)){
-            setInteger(feature,Integer.toString(GET_INT.get(feature).apply(DEFAULT_CONFIG)));
+        if(hasInteger(option)){
+            setInteger(option,Integer.toString(GET_INT.get(option).apply(DEFAULT_CONFIG)));
             return;
         }
-        if(Config.COLORS.equals(feature)){
+        if(Config.COLORS.equals(option)){
             config.setColors(DEFAULT_CONFIG.colors());
             save();
             return;
         }
-        throw new NullPointerException("No such feature:"+feature);
+        throw new NullPointerException("No such option:"+option);
     }
 
-    public static boolean hasInteger(String feature){
-        return GET_INT.containsKey(feature);
+    public static boolean hasInteger(String option){
+        return GET_INT.containsKey(option);
     }
 
-    public static boolean hasLong(String feature){
-        return GET_LONG.containsKey(feature);
+    public static boolean hasLong(String option){
+        return GET_LONG.containsKey(option);
     }
 
-    public static boolean hasString(String feature){
-        return GET_STRING.containsKey(feature);
+    public static boolean hasString(String option){
+        return GET_STRING.containsKey(option);
     }
 
-    public static Set<String> features(){
-        return Set.copyOf(FEATURES);
+    public static Set<String> options(){
+        return Set.copyOf(OPTIONS);
     }
 
-    public static void set(String feature,String value) throws IllegalArgumentException, NullPointerException, IOException {
-        if(hasInteger(feature)){
-            SET_INT.get(feature).apply(config,Integer.parseInt(value));
+    public static void set(String option,String value) throws IllegalArgumentException, NullPointerException, IOException {
+        if(hasInteger(option)){
+            SET_INT.get(option).apply(config,Integer.parseInt(value));
             save();
             return;
         }
-        if(hasLong(feature)){
-            SET_LONG.get(feature).apply(config,value);
+        if(hasLong(option)){
+            SET_LONG.get(option).apply(config,value);
             save();
             return;
         }
-        if(hasString(feature)){
-            SET_STRING.get(feature).apply(config,value);
+        if(hasString(option)){
+            SET_STRING.get(option).apply(config,value);
             save();
             return;
         }
-        throw new NullPointerException("No such feature:"+feature);
+        throw new NullPointerException("No such option:"+option);
     }
 
-    public static String get(String feature) throws IllegalArgumentException,NullPointerException{
-        if(hasInteger(feature)){
-           return GET_INT.get(feature).apply(config).toString();
+    public static String get(String option) throws IllegalArgumentException,NullPointerException{
+        if(hasInteger(option)){
+           return GET_INT.get(option).apply(config).toString();
         }
-        if(hasLong(feature)){
-            return Long.toHexString(GET_LONG.get(feature).apply(config));
+        if(hasLong(option)){
+            return Long.toHexString(GET_LONG.get(option).apply(config));
         }
-        if(hasString(feature)){
-            return GET_STRING.get(feature).apply(config);
+        if(hasString(option)){
+            return GET_STRING.get(option).apply(config);
         }
-        throw new NullPointerException("No such feature:"+feature);
+        throw new NullPointerException("No such option:"+option);
     }
 }

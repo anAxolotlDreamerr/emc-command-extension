@@ -1,4 +1,4 @@
-package io.github.anaxolotldreamerr.client.commands.cx.childcommand.resx;
+package io.github.anaxolotldreamerr.client.commands.cx.childcommand.tx;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -7,9 +7,7 @@ import io.github.anaxolotldreamerr.client.commands.ECommand;
 import io.github.anaxolotldreamerr.client.config.Config;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
-import java.util.Set;
-
-public class Toggle implements ECommand {
+public class SetOption implements ECommand {
     @Override
     public String execute() {
         return "";
@@ -17,8 +15,9 @@ public class Toggle implements ECommand {
 
     @Override
     public void register(CommandNode<FabricClientCommandSource> node) {
-        io.github.anaxolotldreamerr.client.commands.toggle.Toggle.add(node, Set.of(
-                Config.HATRED_PLAYER_NAME_COLOR
+        io.github.anaxolotldreamerr.client.commands.set.SetOption.add(node, java.util.Set.of(
+                Config.BORDER_COLOR,
+                Config.BORDER_OPACITY
         ));
     }
 
